@@ -1,27 +1,11 @@
-.main-content {
-    flex: 1;
-    padding: 20px;
-    box-sizing: border-box;
+.navbar{
+    position: initial;
+    left: 250px;
 }
+@media (max-width: 768px) {
+    .navbar {
+      position: fixed; /* Fija el navbar en la parte superior */
+      width: 100%; /* Hace que el navbar ocupe todo el ancho */
 
-/* Estilos de la tarjeta (Card) */
-.card {
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    width: 300px;
-    margin: 0 auto;
-}
-
-.card h3 {
-    margin-top: 0;
-}
-
-/* Estilos de un contenedor para alinear la tarjeta */
-.card-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-}
+    }
+  }
