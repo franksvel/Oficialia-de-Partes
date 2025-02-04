@@ -7,6 +7,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { LoginComponent } from './auth/login/login.component';
 import { NavComponent } from './nav/nav.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
+import { CardComponent } from './components/card/card.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
     DashboardComponent,
     LoginComponent,
     NavComponent,
-    AgendaComponent
+    AgendaComponent,
+    CardComponent
 
   ],
   imports: [
