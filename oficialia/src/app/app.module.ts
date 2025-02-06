@@ -8,6 +8,14 @@ import { LoginComponent } from './auth/login/login.component';
 import { NavComponent } from './nav/nav.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CardComponent } from './components/card/card.component';
+import { DashcontainerComponent } from './components/dashcontainer/dashcontainer.component';
+import {FullCalendarModule } from '@fullcalendar/angular';
+import { OficeComponent } from './pages/ofice/ofice.component';
+import { CrudtableComponent } from './components/crudtable/crudtable.component';
+
+
+import { Calendar } from '@fullcalendar/core';
+
 
 @NgModule({
   declarations: [
@@ -16,13 +24,18 @@ import { CardComponent } from './components/card/card.component';
     LoginComponent,
     NavComponent,
     AgendaComponent,
-    CardComponent
+    CardComponent,
+    DashcontainerComponent,
+    OficeComponent,
+    CrudtableComponent
 
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-  
+    FullCalendarModule
+
+
   ],
   providers: [
     provideClientHydration(withEventReplay())
