@@ -9,16 +9,18 @@ import { NavComponent } from './nav/nav.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CardComponent } from './components/card/card.component';
 import { DashcontainerComponent } from './components/dashcontainer/dashcontainer.component';
-import {FullCalendarModule } from '@fullcalendar/angular';
+
 import { OficeComponent } from './pages/ofice/ofice.component';
 import { CrudtableComponent } from './components/crudtable/crudtable.component';
+import {OAuthModule } from 'angular-oauth2-oidc'
+import { HttpClientModule } from '@angular/common/http';
 
 
-import { Calendar } from '@fullcalendar/core';
 
 
 @NgModule({
   declarations: [
+
     AppComponent,
     DashboardComponent,
     LoginComponent,
@@ -33,12 +35,15 @@ import { Calendar } from '@fullcalendar/core';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FullCalendarModule
+    OAuthModule.forRoot(),
+    HttpClientModule
+ 
 
 
   ],
   providers: [
-    provideClientHydration(withEventReplay())
+    provideClientHydration(withEventReplay()),
+
   ],
   bootstrap: [AppComponent]
 })

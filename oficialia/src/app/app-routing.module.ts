@@ -14,6 +14,7 @@ const routes: Routes = [
 {path: 'dashboard', component: DashboardComponent},
 {path: 'agenda', component: AgendaComponent},
 {path: 'ofice', component: OficeComponent}
+
 ];
 
 
