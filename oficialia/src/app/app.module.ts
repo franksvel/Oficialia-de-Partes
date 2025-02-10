@@ -13,7 +13,7 @@ import { DashcontainerComponent } from './components/dashcontainer/dashcontainer
 import { OficeComponent } from './pages/ofice/ofice.component';
 import { CrudtableComponent } from './components/crudtable/crudtable.component';
 import {OAuthModule } from 'angular-oauth2-oidc'
-import { HttpClientModule } from '@angular/common/http';
+
 
 
 
@@ -36,7 +36,9 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     OAuthModule.forRoot(),
-    HttpClientModule
+    
+   
+
  
 
 
