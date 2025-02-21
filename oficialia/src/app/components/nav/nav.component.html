@@ -4,11 +4,11 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar>Menu</mat-toolbar>
+    <mat-toolbar><img src="transporte.png"></mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="#">Link 1</a>
-      <a mat-list-item href="#">Link 2</a>
-      <a mat-list-item href="#">Link 3</a>
+      <a mat-list-item href="main">Inicio</a>
+      <a mat-list-item href="oficio">Oficio</a>
+      <a mat-list-item href="#">Circulares</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -22,7 +22,7 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
       }
-      <span>oficialia</span>
+      <span>Sistema Integral de Oficialia de Partes</span>
     </mat-toolbar>
     <app-dashboard></app-dashboard>
     <router-outlet></router-outlet>

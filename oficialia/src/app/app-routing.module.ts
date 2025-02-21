@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
+import { OficioComponent } from './pages/oficio/oficio.component';
+import { MainComponent } from './pages/main/main.component';
 
-import { NavComponent } from './nav/nav.component';
 
 const routes: Routes = [
 { path: '', redirectTo: '/login', pathMatch: 'full' }, 
@@ -10,7 +11,10 @@ const routes: Routes = [
 
 
 {path: 'login', component: LoginComponent},
-{path: 'nav', component: NavComponent},
+{path: 'main', component: MainComponent},
+{path: 'oficio', component: OficioComponent},
+
+
 
 
 ];

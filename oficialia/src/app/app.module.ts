@@ -18,7 +18,15 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { NavComponent } from './nav/nav.component';
+import { NavComponent } from './components/nav/nav.component';
+
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { CrudComponent } from './components/crud/crud.component';
+import { OficioComponent } from './pages/oficio/oficio.component';
+import { MainComponent } from './pages/main/main.component';
+
 
 @NgModule({
   declarations: [
@@ -29,6 +37,11 @@ import { NavComponent } from './nav/nav.component';
     SignInComponent,
     DashboardComponent,
     NavComponent,
+    CrudComponent,
+    OficioComponent,
+    MainComponent,
+
+
   ],
   imports: [
     BrowserModule,
@@ -42,6 +55,10 @@ import { NavComponent } from './nav/nav.component';
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+  
 ],
   providers: [
     provideClientHydration(withEventReplay()),
