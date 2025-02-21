@@ -1,11 +1,17 @@
-.navbar{
-    position: initial;
-    left: 250px;
+.sidenav-container {
+  height: 100%;
 }
-@media (max-width: 768px) {
-    .navbar {
-      position: fixed; /* Fija el navbar en la parte superior */
-      width: 100%; /* Hace que el navbar ocupe todo el ancho */
 
-    }
-  }
+.sidenav {
+  width: 200px;
+}
+
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
