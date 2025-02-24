@@ -1,31 +1,27 @@
-
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><img src="transporte.png"></mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item href="main">Inicio</a>
-      <a mat-list-item href="oficio">Oficio</a>
-      <a mat-list-item href="#">Circulares</a>
+    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    <mat-nav-list class="centered-list">
+      <a mat-list-item routerLink="/main">Inicio</a>
+      <a mat-list-item routerLink="/oficio">Oficio</a>
+      <a mat-list-item routerLink="/circulares">Circulares</a>
+      <a mat-list-item routerLink="/agenda">Agenda</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      @if (isHandset$ | async) {
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-      }
-      <span>Sistema Integral de Oficialia de Partes</span>
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Sistema Integral de Oficialía de Partes</span>
     </mat-toolbar>
-    <app-dashboard></app-dashboard>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
-

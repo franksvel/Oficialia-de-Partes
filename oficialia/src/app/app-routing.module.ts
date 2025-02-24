@@ -13,7 +13,9 @@ const routes: Routes = [
 {path: 'login', component: LoginComponent},
 {path: 'main', component: MainComponent},
 {path: 'oficio', component: OficioComponent},
-
+// { path: 'circulares', component: CircularesComponent },
+// { path: 'agenda', component: AgendaComponent },
+{ path: '', redirectTo: '/inicio', pathMatch: 'full' }
 
 
 

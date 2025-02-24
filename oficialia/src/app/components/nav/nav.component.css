@@ -32,3 +32,7 @@ mat-toolbar img {
   height: 50px; /* Ajusta el tamaño de la imagen (logo) */
   width: auto;
 }
+
+.centered-list a {
+  text-align: center;
+}
