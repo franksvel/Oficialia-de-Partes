@@ -12,11 +12,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import { NavComponent } from './components/nav/nav.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -24,20 +26,17 @@ import { MatSortModule } from '@angular/material/sort';
 import { CrudComponent } from './components/crud/crud.component';
 import { OficioComponent } from './pages/oficio/oficio.component';
 import { MainComponent } from './pages/main/main.component';
+import { AgendaComponent } from './pages/agenda/agenda.component';
 
 
 @NgModule({
   declarations: [
 
     AppComponent,
-    LoginComponent,
-    DashboardComponent,
-    NavComponent,
     CrudComponent,
     OficioComponent,
     MainComponent,
-
-
+    AgendaComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,7 +53,9 @@ import { MainComponent } from './pages/main/main.component';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-  
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule
 ],
   providers: [
     provideClientHydration(withEventReplay()),

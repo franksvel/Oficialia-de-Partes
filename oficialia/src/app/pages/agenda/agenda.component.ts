@@ -6,10 +6,10 @@ import { map, Observable, shareReplay } from 'rxjs';
   selector: 'app-main',
   standalone: false,
   
-  templateUrl: './main.component.html',
-  styleUrl: './main.component.css'
+  templateUrl: './agenda.component.html',
+  styleUrl: './agenda.component.css'
 })
-export class MainComponent {
+export class AgendaComponent {
 showCrudComponent(): any {
   throw new Error ('Method no implemented. ');
 
