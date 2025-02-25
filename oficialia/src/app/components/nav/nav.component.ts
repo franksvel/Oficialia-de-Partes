@@ -10,6 +10,9 @@ import { map, shareReplay } from 'rxjs/operators';
   styleUrl: './nav.component.css'
 })
 export class NavComponent {
+showCrudComponent(): any {
+throw new Error('Method not implemented.');
+}
   private breakpointObserver = inject(BreakpointObserver);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)

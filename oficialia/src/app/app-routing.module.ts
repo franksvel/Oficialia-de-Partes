@@ -7,15 +7,11 @@ import { MainComponent } from './pages/main/main.component';
 
 const routes: Routes = [
 { path: '', redirectTo: '/login', pathMatch: 'full' }, 
-
-
-
 {path: 'login', component: LoginComponent},
 {path: 'main', component: MainComponent},
 {path: 'oficio', component: OficioComponent},
 // { path: 'circulares', component: CircularesComponent },
 // { path: 'agenda', component: AgendaComponent },
-{ path: '', redirectTo: '/inicio', pathMatch: 'full' }
 
 
 

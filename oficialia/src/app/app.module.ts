@@ -7,8 +7,6 @@ import {OAuthModule } from 'angular-oauth2-oidc';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
-import { SignUpComponent } from './auth/features/sign-up/sign-up.component';
-import { SignInComponent } from './auth/features/sign-in/sign-in.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
@@ -33,8 +31,6 @@ import { MainComponent } from './pages/main/main.component';
 
     AppComponent,
     LoginComponent,
-    SignUpComponent,
-    SignInComponent,
     DashboardComponent,
     NavComponent,
     CrudComponent,
