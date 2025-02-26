@@ -23,7 +23,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-import { CrudComponent } from './components/crud/crud.component';
 import { OficioComponent } from './pages/oficio/oficio.component';
 import { MainComponent } from './pages/main/main.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
@@ -33,7 +32,6 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
   declarations: [
 
     AppComponent,
-    CrudComponent,
     OficioComponent,
     MainComponent,
     AgendaComponent,
