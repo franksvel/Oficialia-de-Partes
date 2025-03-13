@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { map, Observable, shareReplay } from 'rxjs';
 
 @Component({
-  selector: 'app-main',
+  selector: 'app-agenda',
   standalone: false,
   
   templateUrl: './agenda.component.html',

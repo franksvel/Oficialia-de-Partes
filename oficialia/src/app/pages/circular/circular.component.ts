@@ -3,13 +3,13 @@ import { Component, inject } from '@angular/core';
 import { map, Observable, shareReplay } from 'rxjs';
 
 @Component({
-  selector: 'app-oficio',
+  selector: 'app-circular',
   standalone: false,
   
-  templateUrl: './oficio.component.html',
-  styleUrl: './oficio.component.css'
+  templateUrl: './circular.component.html',
+  styleUrl: './circular.component.css'
 })
-export class OficioComponent {
+export class CircularComponent {
 showCrudComponent(): any {
   throw new Error ('Method no implemented. ');
 

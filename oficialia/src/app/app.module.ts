@@ -26,6 +26,13 @@ import { MatSortModule } from '@angular/material/sort';
 import { OficioComponent } from './pages/oficio/oficio.component';
 import { MainComponent } from './pages/main/main.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
+import { CircularComponent } from './pages/circular/circular.component';
+import { ApiService } from './api.service';
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RegistrerComponent } from './auth/registrer/registrer.component';
+
+
 
 
 @NgModule({
@@ -35,6 +42,11 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
     OficioComponent,
     MainComponent,
     AgendaComponent,
+    CircularComponent,
+    LoginComponent,
+    RegistrerComponent
+    
+
   ],
   imports: [
     BrowserModule,
@@ -53,13 +65,17 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    ReactiveFormsModule
+
 ],
   providers: [
+    ApiService,
     provideClientHydration(withEventReplay()),
     provideFirebaseApp(() => initializeApp({ projectId: "oficialia-d3a32", appId: "1:849796925257:web:d6279ea69ecb45aee8bc98", storageBucket: "oficialia-d3a32.firebasestorage.app", apiKey: "AIzaSyBBNd7sZ6P-uyQOIVL0qgdtbv4Am7oEkzg", authDomain: "oficialia-d3a32.firebaseapp.com", messagingSenderId: "849796925257", measurementId: "G-6YSJ0BKR92" })),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
+    provideHttpClient(withFetch()) 
 
   ],
   bootstrap: [AppComponent]

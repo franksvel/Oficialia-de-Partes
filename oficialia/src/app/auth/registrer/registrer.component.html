@@ -1,0 +1,63 @@
+<div class="container">
+    <h2>Registro de Usuario</h2>
+  
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Campo de correo electrónico -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo electrónico</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="Introduce tu correo"
+        />
+        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-danger">
+          El correo es obligatorio y debe ser válido.
+        </div>
+      </div>
+  
+      <!-- Campo de contraseña -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          class="form-control"
+          formControlName="password"
+          placeholder="Introduce tu contraseña"
+        />
+        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger">
+          La contraseña es obligatoria y debe tener al menos 6 caracteres.
+        </div>
+      </div>
+  
+      <!-- Campo de confirmación de contraseña -->
+      <div class="mb-3">
+        <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          class="form-control"
+          formControlName="confirmPassword"
+          placeholder="Confirma tu contraseña"
+        />
+        <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-danger">
+          La confirmación de la contraseña es obligatoria y debe tener al menos 6 caracteres.
+        </div>
+      </div>
+  
+      <!-- Mensaje de error o éxito -->
+      <div *ngIf="message" class="alert alert-info">
+        {{ message }}
+      </div>
+  
+      <!-- Botón de envío -->
+      <div class="d-grid">
+        <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || loading">
+          {{ loading ? 'Registrando...' : 'Registrar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+  
