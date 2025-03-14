@@ -13,14 +13,11 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    // Verificar si el usuario está autenticado
-    const isAuthenticated = sessionStorage.getItem('id'); // Verifica si la sesión está activa
+    const isAuthenticated = sessionStorage.getItem('id');
 
     if (isAuthenticated) {
-      // Si está autenticado, permitir el acceso
       return true;
     } else {
-      // Si no está autenticado, redirigir al login
       this.router.navigate(['/login']);
       return false;
     }
