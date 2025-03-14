@@ -31,6 +31,7 @@ import { ApiService } from './api.service';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistrerComponent } from './auth/registrer/registrer.component';
+import { FullCalendarModule } from '@fullcalendar/angular';
 
 
 
@@ -66,7 +67,8 @@ import { RegistrerComponent } from './auth/registrer/registrer.component';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FullCalendarModule
 
 ],
   providers: [
