@@ -8,23 +8,20 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost/api';  // Asegúrate de que la URL sea correcta
-  // Reemplaza con la URL de tu API
+  private apiUrl = 'http://localhost/api'; 
+
 
   constructor(private http: HttpClient) { }
 
-  // Método para registrar un nuevo usuario
   registerUser(email: string, password: string): Observable<any> {
-    const body = { email, password };  // Crea el cuerpo de la solicitud
+    const body = { email, password };  
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
 
-    // Realiza la solicitud POST y maneja los errores
     return this.http.post<any>(`${this.apiUrl}/register.php`, body, { headers })
     .pipe(
       catchError(error => {
-        // Puedes manejar el error aquí, por ejemplo, mostrarlo en consola
         console.error('Error en la solicitud de registro:', error);
         return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
       })
@@ -32,9 +29,9 @@ export class ApiService {
   
   }
 
-  // Método para enviar las credenciales de login
+ 
   login(email: string, password: string): Observable<any> {
-    const body = { email, password };  // Crea el cuerpo de la solicitud
+    const body = { email, password }; 
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
@@ -42,7 +39,6 @@ export class ApiService {
     return this.http.post<any>(`${this.apiUrl}/login.php`, body, { headers })
     .pipe(
       catchError(error => {
-        // Puedes manejar el error aquí, por ejemplo, mostrarlo en consola
         console.error('Error en la solicitud de registro:', error);
         return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
       })

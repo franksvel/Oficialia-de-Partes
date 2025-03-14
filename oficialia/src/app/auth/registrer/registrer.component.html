@@ -2,7 +2,7 @@
     <h2>Registro de Usuario</h2>
   
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- Campo de correo electrónico -->
+     
       <div class="mb-3">
         <label for="email" class="form-label">Correo electrónico</label>
         <input
@@ -17,7 +17,7 @@
         </div>
       </div>
   
-      <!-- Campo de contraseña -->
+ 
       <div class="mb-3">
         <label for="password" class="form-label">Contraseña</label>
         <input
@@ -32,7 +32,6 @@
         </div>
       </div>
   
-      <!-- Campo de confirmación de contraseña -->
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
         <input
@@ -47,12 +46,12 @@
         </div>
       </div>
   
-      <!-- Mensaje de error o éxito -->
+   
       <div *ngIf="message" class="alert alert-info">
         {{ message }}
       </div>
   
-      <!-- Botón de envío -->
+
       <div class="d-grid">
         <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || loading">
           {{ loading ? 'Registrando...' : 'Registrar' }}

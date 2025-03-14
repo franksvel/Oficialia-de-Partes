@@ -14,15 +14,13 @@ export class RegistrerComponent {
   loading: boolean = false;
 
   constructor(private fb: FormBuilder, private apiService: ApiService) {
-    // Inicialización del formulario con validaciones
     this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],  // Validación para email
-      password: ['', [Validators.required, Validators.minLength(6)]],  // Validación para contraseña
+      email: ['', [Validators.required, Validators.email]], 
+      password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  // Método para manejar el envío del formulario
   onSubmit(): void {
     if (this.registerForm.invalid) {
       this.message = 'Por favor, completa los campos correctamente.';
@@ -31,23 +29,21 @@ export class RegistrerComponent {
 
     const { email, password, confirmPassword } = this.registerForm.value;
 
-    // Verifica si las contraseñas coinciden
+    
     if (password !== confirmPassword) {
       this.message = 'Las contraseñas no coinciden.';
       return;
     }
 
-    // Muestra un mensaje de carga mientras se procesa
     this.loading = true;
 
-    // Llama al servicio para registrar al usuario
-    // Llama al servicio para registrar al usuario
+  
     this.apiService['registerUser'](email, password).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.status === 'success') {
           this.message = 'Usuario registrado exitosamente.';
-          this.registerForm.reset();  // Reinicia el formulario
+          this.registerForm.reset(); 
         } else {
           this.message = response.message || 'Hubo un error al registrar el usuario.';
         }

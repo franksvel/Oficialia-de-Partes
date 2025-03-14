@@ -21,12 +21,22 @@
           <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
         </button>
         <span>Sistema Integral de Oficialía de Partes</span>
-        <mat-icon>account_circle</mat-icon>
+        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onLogout()">
+            <mat-icon>logout</mat-icon>
+            <span>Cerrar Sesion</span>
+          </button>
+        </mat-menu>
+        
       </mat-toolbar>
 
       <div>
        <h6>Oficios en tramite</h6>
       </div>
+      
     </mat-sidenav-content>
   </mat-sidenav-container>
   
