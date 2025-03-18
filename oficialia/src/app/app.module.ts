@@ -29,9 +29,11 @@ import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CircularComponent } from './pages/circular/circular.component';
 import { ApiService } from './api.service';
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistrerComponent } from './auth/registrer/registrer.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
+import { MatDialogModule } from '@angular/material/dialog';
+import { OficioDialogComponent } from './oficio-dialog/oficio-dialog.component';
 
 
 
@@ -45,7 +47,9 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     AgendaComponent,
     CircularComponent,
     LoginComponent,
-    RegistrerComponent
+    RegistrerComponent,
+    OficioDialogComponent,
+
     
 
   ],
@@ -68,7 +72,9 @@ import { FullCalendarModule } from '@fullcalendar/angular';
     MatInputModule,
     MatDatepickerModule,
     ReactiveFormsModule,
-    FullCalendarModule
+    FullCalendarModule,
+    FormsModule,
+    MatDialogModule
 
 ],
   providers: [

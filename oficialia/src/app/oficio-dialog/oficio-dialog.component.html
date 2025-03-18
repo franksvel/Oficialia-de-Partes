@@ -1,0 +1,29 @@
+<!-- oficio-dialog.component.html -->
+<h2 mat-dialog-title>{{ oficio?.numero ? 'Editar Oficio' : 'Nuevo Oficio' }}</h2>
+
+<mat-dialog-content>
+  <mat-form-field appearance="fill">
+    <mat-label>Numero de Oficio</mat-label>
+    <input matInput [(ngModel)]="oficio.numero" name="numero" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Fecha de Recepción</mat-label>
+    <input matInput [(ngModel)]="oficio.fechaRecepcion" name="fechaRecepcion" type="date" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Remitente</mat-label>
+    <input matInput [(ngModel)]="oficio.remitente" name="remitente" required />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Asunto</mat-label>
+    <input matInput [(ngModel)]="oficio.asunto" name="asunto" required />
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onClose()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="oficio" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>
