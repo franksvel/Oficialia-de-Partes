@@ -12,6 +12,22 @@ export class ApiService {
   
   constructor(private http: HttpClient) { }
 
+  // Método para eliminar un oficio
+  eliminarOficio(numero: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // Enviar el número del oficio para eliminarlo
+    return this.http.delete<any>(`${this.apiUrl}/eliminar_oficio.php?numero=${numero}`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al eliminar el oficio:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
+
   // Método para registrar un usuario (ya existente)
   registerUser(email: string, password: string): Observable<any> {
     const body = { email, password };
@@ -44,6 +60,21 @@ export class ApiService {
       );
   }
 
+  // Método para obtener los oficios desde la base de datos
+  obtenerOficios(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<any>(`${this.apiUrl}/obtener_oficios.php`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al obtener los oficios:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
+
   // Método para guardar un oficio
   guardarOficio(oficio: any): Observable<any> {
     const body = oficio; // El oficio es el objeto que se envía
@@ -51,7 +82,6 @@ export class ApiService {
       'Content-Type': 'application/json'
     });
 
-    // Realiza la solicitud POST al archivo PHP (guardar_oficio.php)
     return this.http.post<any>(`${this.apiUrl}/guardar_oficio.php`, body, { headers })
       .pipe(
         catchError(error => {

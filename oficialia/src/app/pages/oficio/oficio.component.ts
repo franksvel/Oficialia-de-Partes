@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,7 +12,7 @@ import { OficioDialogComponent } from '../../oficio-dialog/oficio-dialog.compone
   templateUrl: './oficio.component.html',
   styleUrls: ['./oficio.component.css']
 })
-export class OficioComponent {
+export class OficioComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
   private dialog = inject(MatDialog);
@@ -34,15 +34,37 @@ export class OficioComponent {
     remitente: '',
     asunto: ''
   };
-  oficios = [
-    { numero: '12345', fechaRecepcion: '2025-03-01', remitente: 'Juan Perez', asunto: 'Solicitud de Permiso' },
-    { numero: '12346', fechaRecepcion: '2025-03-02', remitente: 'Ana Gomez', asunto: 'Informe de Actividades' }
-  ];
+  oficios: any[] = [];  // Asegúrate de que esta propiedad sea un array vacío al inicio
 
   // Método de logout
   onLogout(): void {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
+  }
+
+  // Cargar los oficios desde la API
+  ngOnInit(): void {
+    this.cargarOficios();  // Llamamos al método para cargar los oficios
+  }
+
+  cargarOficios(): void {
+    this.apiService.obtenerOficios().subscribe({
+      next: (response) => {
+        if (response && response.status === 'success') {
+          this.oficios = response.data;  // Asigna los datos de la respuesta a la propiedad 'oficios'
+        } else {
+          alert('No se pudieron cargar los oficios');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar los oficios:', error);
+        alert('Hubo un error al cargar los oficios');
+      },
+      complete: () => {
+        // Puedes hacer algo cuando la carga de los oficios haya terminado, si es necesario.
+        console.log('Carga de oficios completada.');
+      }
+    });
   }
 
   // Abre el diálogo para agregar o editar un oficio
@@ -57,7 +79,7 @@ export class OficioComponent {
         if (this.isEditMode) {
           const index = this.oficios.findIndex(o => o.numero === result.numero);
           if (index !== -1) {
-            this.oficios[index] = result;
+            this.oficios[index] = result;  // Si estamos en modo edición, actualizamos el oficio
           }
         } else {
           this.saveOficio(result);  // Si no estamos en modo edición, guardamos el nuevo oficio
@@ -69,8 +91,8 @@ export class OficioComponent {
 
   // Método para agregar o editar un oficio
   saveOficio(oficio: any): void {
-    this.apiService.guardarOficio(oficio).subscribe(
-      response => {
+    this.apiService.guardarOficio(oficio).subscribe({
+      next: (response) => {
         if (response && response.status === 'success') {
           alert('Oficio guardado correctamente');
           // Si el oficio fue guardado exitosamente, lo agregamos a la lista
@@ -79,21 +101,24 @@ export class OficioComponent {
           alert('Hubo un error al guardar el oficio');
         }
       },
-      error => {
+      error: (error) => {
         console.error('Error al guardar el oficio', error);
         alert('Hubo un error al guardar el oficio');
+      },
+      complete: () => {
+        console.log('Guardado del oficio completado.');
       }
-    );
+    });
   }
 
-  // Método para editar un oficio
+
   onEdit(oficio: any): void {
     this.isEditMode = true;
     this.oficio = { ...oficio };  // Copia el oficio seleccionado
     this.openOficioDialog();  // Abre el diálogo para editarlo
   }
 
-  // Método para eliminar un oficio
+
   onDelete(oficio: any): void {
     const index = this.oficios.findIndex(o => o.numero === oficio.numero);
     if (index !== -1) {
