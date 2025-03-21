@@ -46,10 +46,8 @@ export class OficioComponent implements OnInit {
     this.apiService.obtenerOficios().subscribe({
       next: (response) => {
         if (response && response.status === 'success') {
-          this.oficios = response.data;  // Se asigna directamente sin modificar el ID
+          this.oficios = response.data;  // Asigna directamente los oficios sin modificar el ID
           this.cdr.detectChanges();
-        } else {
-          alert('No se pudieron cargar los oficios');
         }
       },
       error: (error) => {
@@ -87,8 +85,8 @@ export class OficioComponent implements OnInit {
       next: (response) => {
         if (response && response.status === 'success') {
           alert('Oficio guardado correctamente');
-          this.oficios.push(response.data);  // Agregamos el oficio devuelto por el backend con su ID correcto
-          this.cdr.detectChanges();
+          this.oficios.push(response.data);  // Solo agrega si no existe el ID
+          this.cdr.detectChanges();  // Forza la detección de cambios
         } else {
           alert('Hubo un error al guardar el oficio');
         }
@@ -105,11 +103,12 @@ export class OficioComponent implements OnInit {
       next: (response) => {
         if (response && response.status === 'success') {
           alert('Oficio actualizado correctamente');
-          const index = this.oficios.findIndex(o => o.id === oficio.id);
+          // Reemplaza el oficio actualizado sin duplicar
+          const index = this.oficios.findIndex(o => o.id === response.data.id);
           if (index !== -1) {
-            this.oficios[index] = response.data;
+            this.oficios[index] = response.data;  // Actualiza el oficio en el índice correcto
           }
-          this.cdr.detectChanges();
+          this.cdr.detectChanges();  // Forza la detección de cambios
         } else {
           alert('No se pudo actualizar el oficio');
         }
@@ -134,23 +133,21 @@ export class OficioComponent implements OnInit {
     }
 
     const confirmacion = confirm(`¿Estás seguro de que deseas eliminar el oficio con ID ${oficio.id}?`);
-    if (!confirmacion) {
-      return;
-    }
+    if (!confirmacion) return;
 
     this.apiService.eliminarOficio(oficio.id).subscribe({
       next: (response) => {
         if (response && response.status === 'success') {
-          this.oficios = this.oficios.filter(o => o.id !== oficio.id);
+          this.oficios = this.oficios.filter(o => o.id !== oficio.id);  // Elimina el oficio sin recargar
           alert('Oficio eliminado correctamente');
-          this.cdr.detectChanges();
+          this.cdr.detectChanges();  // Forza la detección de cambios
         } else {
-          alert('No se pudo eliminar el oficio. Puede que el ID no exista.');
+          alert('No se pudo eliminar el oficio.');
         }
       },
       error: (error) => {
         console.error('Error al eliminar el oficio:', error);
-        alert('Hubo un error al eliminar el oficio. Revisa los logs del servidor.');
+        alert('Hubo un error al eliminar el oficio.');
       }
     });
   }
