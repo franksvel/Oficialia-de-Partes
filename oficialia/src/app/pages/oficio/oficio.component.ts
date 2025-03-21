@@ -3,8 +3,9 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { map, Observable, shareReplay } from 'rxjs';
-import { ApiService } from '../../api.service';  // Importa el servicio para interactuar con la API
+import { ApiService } from '../../api.service';  
 import { OficioDialogComponent } from '../../oficio-dialog/oficio-dialog.component';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-oficio',
@@ -16,7 +17,8 @@ export class OficioComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
   private dialog = inject(MatDialog);
-  private apiService = inject(ApiService);  // Inyecta el servicio para guardar oficios
+  private apiService = inject(ApiService);  
+  private cdr = inject(ChangeDetectorRef);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -24,34 +26,28 @@ export class OficioComponent implements OnInit {
       shareReplay()
     );
 
-  // Columnas de la tabla
-  displayedColumns: string[] = ['numero', 'remitente', 'asunto', 'acciones'];
+  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'acciones'];
 
   isEditMode = false;
   oficio = {
+    id: '',
     numero: '',
     fechaRecepcion: '',
     remitente: '',
     asunto: ''
   };
-  oficios: any[] = [];  // Asegúrate de que esta propiedad sea un array vacío al inicio
+  oficios: any[] = [];  
 
-  // Método de logout
-  onLogout(): void {
-    sessionStorage.removeItem('id');
-    this.router.navigate(['/login']);
-  }
-
-  // Cargar los oficios desde la API
   ngOnInit(): void {
-    this.cargarOficios();  // Llamamos al método para cargar los oficios
+    this.cargarOficios();
   }
 
   cargarOficios(): void {
     this.apiService.obtenerOficios().subscribe({
       next: (response) => {
         if (response && response.status === 'success') {
-          this.oficios = response.data;  // Asigna los datos de la respuesta a la propiedad 'oficios'
+          this.oficios = response.data;  // Se asigna directamente sin modificar el ID
+          this.cdr.detectChanges();
         } else {
           alert('No se pudieron cargar los oficios');
         }
@@ -59,15 +55,10 @@ export class OficioComponent implements OnInit {
       error: (error) => {
         console.error('Error al cargar los oficios:', error);
         alert('Hubo un error al cargar los oficios');
-      },
-      complete: () => {
-        // Puedes hacer algo cuando la carga de los oficios haya terminado, si es necesario.
-        console.log('Carga de oficios completada.');
       }
     });
   }
 
-  // Abre el diálogo para agregar o editar un oficio
   openOficioDialog(): void {
     const dialogRef = this.dialog.open(OficioDialogComponent, {
       width: '500px',
@@ -77,26 +68,27 @@ export class OficioComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         if (this.isEditMode) {
-          const index = this.oficios.findIndex(o => o.numero === result.numero);
-          if (index !== -1) {
-            this.oficios[index] = result;  // Si estamos en modo edición, actualizamos el oficio
-          }
+          this.updateOficio(result);
         } else {
-          this.saveOficio(result);  // Si no estamos en modo edición, guardamos el nuevo oficio
+          this.saveOficio(result);
         }
       }
       this.onResetForm();
     });
   }
 
-  // Método para agregar o editar un oficio
+  onLogout(): void {
+    sessionStorage.removeItem('id');
+    this.router.navigate(['/login']);
+  }
+
   saveOficio(oficio: any): void {
     this.apiService.guardarOficio(oficio).subscribe({
       next: (response) => {
         if (response && response.status === 'success') {
           alert('Oficio guardado correctamente');
-          // Si el oficio fue guardado exitosamente, lo agregamos a la lista
-          this.oficios.push(oficio);
+          this.oficios.push(response.data);  // Agregamos el oficio devuelto por el backend con su ID correcto
+          this.cdr.detectChanges();
         } else {
           alert('Hubo un error al guardar el oficio');
         }
@@ -104,36 +96,70 @@ export class OficioComponent implements OnInit {
       error: (error) => {
         console.error('Error al guardar el oficio', error);
         alert('Hubo un error al guardar el oficio');
-      },
-      complete: () => {
-        console.log('Guardado del oficio completado.');
       }
     });
   }
 
+  updateOficio(oficio: any): void {
+    this.apiService.guardarOficio(oficio).subscribe({
+      next: (response) => {
+        if (response && response.status === 'success') {
+          alert('Oficio actualizado correctamente');
+          const index = this.oficios.findIndex(o => o.id === oficio.id);
+          if (index !== -1) {
+            this.oficios[index] = response.data;
+          }
+          this.cdr.detectChanges();
+        } else {
+          alert('No se pudo actualizar el oficio');
+        }
+      },
+      error: (error) => {
+        console.error('Error al actualizar el oficio', error);
+        alert('Hubo un error al actualizar el oficio');
+      }
+    });
+  }
 
   onEdit(oficio: any): void {
     this.isEditMode = true;
-    this.oficio = { ...oficio };  // Copia el oficio seleccionado
-    this.openOficioDialog();  // Abre el diálogo para editarlo
+    this.oficio = { ...oficio };
+    this.openOficioDialog();
   }
-
 
   onDelete(oficio: any): void {
-    const index = this.oficios.findIndex(o => o.numero === oficio.numero);
-    if (index !== -1) {
-      this.oficios.splice(index, 1);  // Elimina el oficio de la lista local
-      alert('Oficio eliminado correctamente');
+    if (!oficio || !oficio.id) {
+      alert('Error: El ID del oficio es inválido.');
+      return;
     }
+
+    const confirmacion = confirm(`¿Estás seguro de que deseas eliminar el oficio con ID ${oficio.id}?`);
+    if (!confirmacion) {
+      return;
+    }
+
+    this.apiService.eliminarOficio(oficio.id).subscribe({
+      next: (response) => {
+        if (response && response.status === 'success') {
+          this.oficios = this.oficios.filter(o => o.id !== oficio.id);
+          alert('Oficio eliminado correctamente');
+          this.cdr.detectChanges();
+        } else {
+          alert('No se pudo eliminar el oficio. Puede que el ID no exista.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar el oficio:', error);
+        alert('Hubo un error al eliminar el oficio. Revisa los logs del servidor.');
+      }
+    });
   }
 
-  // Método para resetear el formulario
   onResetForm(): void {
     this.isEditMode = false;
-    this.oficio = { numero: '', fechaRecepcion: '', remitente: '', asunto: '' };
+    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '' };
   }
 
-  // Cierra el diálogo
   onClose(): void {
     this.dialog.closeAll();
   }

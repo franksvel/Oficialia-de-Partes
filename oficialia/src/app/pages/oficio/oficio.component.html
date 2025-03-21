@@ -11,6 +11,7 @@
       <a mat-list-item routerLink="/oficio">Oficio</a>
       <a mat-list-item routerLink="/circular">Circulares</a>
       <a mat-list-item routerLink="/agenda">Agenda</a>
+      <a mat-list-item routerLink="/report">Reportes</a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -42,6 +43,12 @@
     <div *ngIf="oficios.length">
       <table mat-table [dataSource]="oficios">
         <!-- Definición de columnas -->
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> ID </th>
+          <td mat-cell *matCellDef="let oficio">{{ oficio.id ? oficio.id : 'ID no disponible' }}</td>
+        </ng-container>
+
         <ng-container matColumnDef="numero">
           <th mat-header-cell *matHeaderCellDef> Número </th>
           <td mat-cell *matCellDef="let oficio">{{ oficio.numero }}</td>

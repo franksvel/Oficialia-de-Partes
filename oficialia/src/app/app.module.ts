@@ -34,6 +34,8 @@ import { RegistrerComponent } from './auth/registrer/registrer.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { MatDialogModule } from '@angular/material/dialog';
 import { OficioDialogComponent } from './oficio-dialog/oficio-dialog.component';
+import { ReportComponent } from './pages/report/report.component';
+import { UserComponent } from './pages/user/user.component';
 
 
 
@@ -49,6 +51,8 @@ import { OficioDialogComponent } from './oficio-dialog/oficio-dialog.component';
     LoginComponent,
     RegistrerComponent,
     OficioDialogComponent,
+    ReportComponent,
+    UserComponent,
 
     
 
