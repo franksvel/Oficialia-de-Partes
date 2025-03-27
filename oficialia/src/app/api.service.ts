@@ -110,4 +110,15 @@ export class ApiService {
         })
       );
   }
+  archivarDocumento(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    return this.http.post<any>(`${this.apiUrl}/archivar_oficio.php`, formData, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al archivar el documento:', error);
+          return throwError(() => new Error('Algo salió mal, intenta de nuevo.'));
+        })
+      );
+  }
+
 }

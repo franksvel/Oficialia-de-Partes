@@ -19,6 +19,7 @@ import { MatListModule } from '@angular/material/list';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatStepperModule} from '@angular/material/stepper';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -78,7 +79,9 @@ import { UserComponent } from './pages/user/user.component';
     ReactiveFormsModule,
     FullCalendarModule,
     FormsModule,
-    MatDialogModule
+    MatDialogModule,
+    MatButtonModule,
+    MatStepperModule,
 
 ],
   providers: [

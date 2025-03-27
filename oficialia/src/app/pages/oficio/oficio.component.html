@@ -43,7 +43,6 @@
     <div *ngIf="oficios.length">
       <table mat-table [dataSource]="oficios">
         <!-- Definición de columnas -->
-
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> ID </th>
           <td mat-cell *matCellDef="let oficio">{{ oficio.id ? oficio.id : 'ID no disponible' }}</td>
@@ -73,6 +72,9 @@
             <button mat-icon-button (click)="onDelete(oficio)">
               <mat-icon>delete</mat-icon>
             </button>
+            <button mat-icon-button (click)="openFileSelector(oficio)">
+              <mat-icon>archive</mat-icon>
+            </button>
           </td>
         </ng-container>
 
@@ -83,3 +85,6 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<!-- Input de tipo file oculto -->
+<input type="file" id="fileInput" style="display: none" (change)="onFileSelected($event)" />

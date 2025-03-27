@@ -85,8 +85,7 @@ export class OficioComponent implements OnInit {
       next: (response) => {
         if (response && response.status === 'success') {
           alert('Oficio guardado correctamente');
-          // Recargar los oficios desde el servidor para asegurar sincronización
-          this.cargarOficios();  // Esto recarga los datos directamente desde el servidor
+          this.cargarOficios();  // Recarga los datos directamente desde el servidor
         } else {
           alert('Hubo un error al guardar el oficio');
         }
@@ -97,21 +96,17 @@ export class OficioComponent implements OnInit {
       }
     });
   }
- 
-  
-  
 
   updateOficio(oficio: any): void {
     if (!oficio || !oficio.id) {
       alert('Datos del oficio inválidos');
       return;
     }
-  
+
     this.apiService.editarOficio(oficio).subscribe({
       next: (response) => {
         if (response?.status === 'success') {
           alert('Oficio actualizado correctamente');
-          // Recargar los oficios desde el servidor para asegurar sincronización
           this.cargarOficios();  // Recarga la lista de oficios
         } else {
           alert('No se pudo actualizar el oficio');
@@ -123,8 +118,6 @@ export class OficioComponent implements OnInit {
       }
     });
   }
-  
-
 
   onDelete(oficio: any): void {
     if (!oficio || !oficio.id) {
@@ -151,11 +144,13 @@ export class OficioComponent implements OnInit {
       }
     });
   }
+
   onEdit(oficio: any): void {
     this.isEditMode = true;
     this.oficio = { ...oficio };
     this.openOficioDialog();
   }
+
   onResetForm(): void {
     this.isEditMode = false;
     this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '' };
@@ -164,4 +159,40 @@ export class OficioComponent implements OnInit {
   onClose(): void {
     this.dialog.closeAll();
   }
+
+  // Nueva función para manejar la selección de archivos
+  openFileSelector(oficio: any): void {
+    // Mostrar el input file oculto cuando se hace clic en el botón de Archivar
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click(); // Activar la ventana del explorador de archivos
+    }
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('Archivo seleccionado:', file);
+  
+      const formData = new FormData();
+      formData.append('file', file);
+  
+      // Llamar al servicio API para almacenar el archivo
+      this.apiService.archivarDocumento(formData).subscribe({
+        next: (response) => {
+          if (response.status === 'success') {
+            alert('Documento archivado correctamente');
+          } else {
+            alert('Error al archivar el documento');
+          }
+        },
+        error: (error) => {
+          console.error('Error al archivar el documento:', error);
+          alert('Hubo un error al archivar el documento');
+        }
+      });
+    }
+  }
+  
+  
 }
