@@ -85,8 +85,8 @@ export class OficioComponent implements OnInit {
       next: (response) => {
         if (response && response.status === 'success') {
           alert('Oficio guardado correctamente');
-          this.oficios.push(response.data);  // Solo agrega si no existe el ID
-          this.cdr.detectChanges();  // Forza la detección de cambios
+          // Recargar los oficios desde el servidor para asegurar sincronización
+          this.cargarOficios();  // Esto recarga los datos directamente desde el servidor
         } else {
           alert('Hubo un error al guardar el oficio');
         }
@@ -97,34 +97,34 @@ export class OficioComponent implements OnInit {
       }
     });
   }
+ 
+  
+  
 
   updateOficio(oficio: any): void {
-    this.apiService.guardarOficio(oficio).subscribe({
+    if (!oficio || !oficio.id) {
+      alert('Datos del oficio inválidos');
+      return;
+    }
+  
+    this.apiService.editarOficio(oficio).subscribe({
       next: (response) => {
-        if (response && response.status === 'success') {
+        if (response?.status === 'success') {
           alert('Oficio actualizado correctamente');
-          // Reemplaza el oficio actualizado sin duplicar
-          const index = this.oficios.findIndex(o => o.id === response.data.id);
-          if (index !== -1) {
-            this.oficios[index] = response.data;  // Actualiza el oficio en el índice correcto
-          }
-          this.cdr.detectChanges();  // Forza la detección de cambios
+          // Recargar los oficios desde el servidor para asegurar sincronización
+          this.cargarOficios();  // Recarga la lista de oficios
         } else {
           alert('No se pudo actualizar el oficio');
         }
       },
       error: (error) => {
-        console.error('Error al actualizar el oficio', error);
-        alert('Hubo un error al actualizar el oficio');
+        console.error('Error al actualizar el oficio:', error);
+        alert('Hubo un error al actualizar el oficio. Intente nuevamente.');
       }
     });
   }
+  
 
-  onEdit(oficio: any): void {
-    this.isEditMode = true;
-    this.oficio = { ...oficio };
-    this.openOficioDialog();
-  }
 
   onDelete(oficio: any): void {
     if (!oficio || !oficio.id) {
@@ -151,7 +151,11 @@ export class OficioComponent implements OnInit {
       }
     });
   }
-
+  onEdit(oficio: any): void {
+    this.isEditMode = true;
+    this.oficio = { ...oficio };
+    this.openOficioDialog();
+  }
   onResetForm(): void {
     this.isEditMode = false;
     this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '' };

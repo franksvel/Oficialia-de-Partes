@@ -8,6 +8,9 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
+  actualizarOficio(oficio: any) {
+    throw new Error('Method not implemented.');
+  }
   private apiUrl = 'http://localhost/api'; // Asegúrate de que esta URL esté correcta
   
   constructor(private http: HttpClient) { }
@@ -99,7 +102,7 @@ export class ApiService {
       'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(`${this.apiUrl}/editar_oficio.php`, body, { headers })
+    return this.http.post<any>(`${this.apiUrl}/editar_oficios.php`, body, { headers })
       .pipe(
         catchError(error => {
           console.error('Error al guardar el oficio:', error);
