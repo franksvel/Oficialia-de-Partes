@@ -41,6 +41,8 @@ import { UserComponent } from './pages/user/user.component';
 
 
 
+
+
 @NgModule({
   declarations: [
 
@@ -82,6 +84,9 @@ import { UserComponent } from './pages/user/user.component';
     MatDialogModule,
     MatButtonModule,
     MatStepperModule,
+    
+  
+ 
 
 ],
   providers: [
