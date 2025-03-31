@@ -1,0 +1,46 @@
+.sidenav-container {
+    height: 100%;
+  }
+  
+  .sidenav {
+    width: 200px;
+  }
+  
+  .sidenav .mat-toolbar {
+    background: inherit;
+  }
+  
+  .mat-toolbar.mat-primary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .mat-h1 {
+    font-size: 24px; /* Ajusta el tamaño de la fuente a un tamaño adecuado */
+    text-align: left; /* Alinea el texto hacia la izquierda */
+    margin-left: 10px; /* Asegura un pequeño margen izquierdo para no estar pegado al borde */
+  }
+  
+  mat-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Esto coloca el logo a la izquierda */
+    height: 60px; /* Ajusta la altura para que coincida con la de un menú */
+  }
+  
+  mat-toolbar img {
+    height: 50px; /* Ajusta el tamaño de la imagen (logo) */
+    width: auto;
+  }
+  
+  .centered-list a {
+    text-align: center;
+  }
+  
+   /* Estilo del formulario */
+   form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }

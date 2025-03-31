@@ -32,16 +32,5 @@ export class MainComponent {
   showCrudComponent(): void {
     console.log('Método no implementado');
   }
-  displayedColumns: string[] = ['id', 'fecha', 'descripcion', 'estatus'];
-  oficios = [
-    { id: 1, fecha: '2025-03-10', descripcion: 'Oficio de solicitud', estatus: 'Pendiente' },
-    { id: 2, fecha: '2025-03-12', descripcion: 'Oficio de respuesta', estatus: 'Completado' },
-    { id: 3, fecha: '2025-03-13', descripcion: 'Oficio de revisión', estatus: 'Pendiente' }
-  ];
 
-  constructor() {}
-
-  ngOnInit(): void {
-    // Aquí puedes hacer una llamada HTTP para obtener los datos de la base de datos
-  }
 }

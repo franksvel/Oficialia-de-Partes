@@ -8,6 +8,7 @@ import { CircularComponent } from './pages/circular/circular.component';
 import { AuthGuard } from './auth.guard'; 
 import { RegistrerComponent } from './auth/registrer/registrer.component';
 import { ReportComponent } from './pages/report/report.component';
+import { UserComponent } from './pages/user/user.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] }, 
   { path: 'circular', component: CircularComponent, canActivate: [AuthGuard] },
   { path: 'report', component: ReportComponent, canActivate: [AuthGuard]},
+  { path: 'user', component: UserComponent}
 ];
 
 @NgModule({
