@@ -161,36 +161,61 @@ export class OficioComponent implements OnInit {
   }
 
   // Nueva función para manejar la selección de archivos
-  openFileSelector(oficio: any): void {
-    // Mostrar el input file oculto cuando se hace clic en el botón de Archivar
+  openFileSelector(): void {
+    // Obtén el elemento de entrada de archivo y simula el clic para abrir el selector
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
-      fileInput.click(); // Activar la ventana del explorador de archivos
+      fileInput.click();  // Activa la selección de archivos
     }
   }
-
+  
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    if (file) {
-      console.log('Archivo seleccionado:', file);
   
-      const formData = new FormData();
-      formData.append('file', file);
+    // Verifica que se haya seleccionado un archivo
+    if (!file) {
+      alert('No se ha seleccionado ningún archivo.');
+      return;
+    }
   
-      // Llamar al servicio API para almacenar el archivo
-      this.apiService.archivarDocumento(formData).subscribe({
-        next: (response) => {
-          if (response.status === 'success') {
-            alert('Documento archivado correctamente');
-          } else {
-            alert('Error al archivar el documento');
-          }
-        },
-        error: (error) => {
-          console.error('Error al archivar el documento:', error);
-          alert('Hubo un error al archivar el documento');
+    // Verifica el tipo de archivo
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+      alert('Tipo de archivo no permitido. Solo se permiten archivos PDF, JPG y PNG.');
+      return;
+    }
+  
+    // Verifica el tamaño del archivo
+    const maxSize = 5 * 1024 * 1024; // 5 MB
+    if (file.size > maxSize) {
+      alert('El archivo excede el tamaño máximo permitido (5MB).');
+      return;
+    }
+  
+    console.log('Archivo seleccionado:', file);
+  
+    const formData = new FormData();
+    formData.append('file', file); // El archivo se agrega al FormData
+  
+    // Llamar al servicio API para almacenar el archivo
+    this.apiService.archivarDocumento(formData).subscribe({
+      next: (response) => {
+        if (response.status === 'success') {
+          alert('Documento archivado correctamente');
+        } else {
+          alert('Error al archivar el documento');
         }
-      });
+      },
+      error: (error) => {
+        console.error('Error al archivar el documento:', error);
+        alert('Hubo un error al archivar el documento');
+      }
+    });
+  
+    // Restablecer el input de archivo
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = ''; // Restablece el valor del input
     }
   }
   
