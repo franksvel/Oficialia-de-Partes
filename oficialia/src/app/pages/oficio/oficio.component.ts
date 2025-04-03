@@ -45,8 +45,8 @@ export class OficioComponent implements OnInit {
   cargarOficios(): void {
     this.apiService.obtenerOficios().subscribe({
       next: (response) => {
-        if (response && response.status === 'success') {
-          this.oficios = response.data;  // Asigna directamente los oficios sin modificar el ID
+        if (response?.status === 'success') {
+          this.oficios = response.data;
           this.cdr.detectChanges();
         }
       },
@@ -65,11 +65,7 @@ export class OficioComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        if (this.isEditMode) {
-          this.updateOficio(result);
-        } else {
-          this.saveOficio(result);
-        }
+        this.isEditMode ? this.updateOficio(result) : this.saveOficio(result);
       }
       this.onResetForm();
     });
@@ -83,9 +79,9 @@ export class OficioComponent implements OnInit {
   saveOficio(oficio: any): void {
     this.apiService.guardarOficio(oficio).subscribe({
       next: (response) => {
-        if (response && response.status === 'success') {
+        if (response?.status === 'success') {
           alert('Oficio guardado correctamente');
-          this.cargarOficios();  // Recarga los datos directamente desde el servidor
+          this.cargarOficios();
         } else {
           alert('Hubo un error al guardar el oficio');
         }
@@ -98,7 +94,7 @@ export class OficioComponent implements OnInit {
   }
 
   updateOficio(oficio: any): void {
-    if (!oficio || !oficio.id) {
+    if (!oficio?.id) {
       alert('Datos del oficio inválidos');
       return;
     }
@@ -107,7 +103,7 @@ export class OficioComponent implements OnInit {
       next: (response) => {
         if (response?.status === 'success') {
           alert('Oficio actualizado correctamente');
-          this.cargarOficios();  // Recarga la lista de oficios
+          this.cargarOficios();
         } else {
           alert('No se pudo actualizar el oficio');
         }
@@ -120,20 +116,19 @@ export class OficioComponent implements OnInit {
   }
 
   onDelete(oficio: any): void {
-    if (!oficio || !oficio.id) {
+    if (!oficio?.id) {
       alert('Error: El ID del oficio es inválido.');
       return;
     }
 
-    const confirmacion = confirm(`¿Estás seguro de que deseas eliminar el oficio con ID ${oficio.id}?`);
-    if (!confirmacion) return;
+    if (!confirm(`¿Estás seguro de que deseas eliminar el oficio con ID ${oficio.id}?`)) return;
 
     this.apiService.eliminarOficio(oficio.id).subscribe({
       next: (response) => {
-        if (response && response.status === 'success') {
-          this.oficios = this.oficios.filter(o => o.id !== oficio.id);  // Elimina el oficio sin recargar
+        if (response?.status === 'success') {
+          this.oficios = this.oficios.filter(o => o.id !== oficio.id);
           alert('Oficio eliminado correctamente');
-          this.cdr.detectChanges();  // Forza la detección de cambios
+          this.cdr.detectChanges();
         } else {
           alert('No se pudo eliminar el oficio.');
         }
@@ -160,44 +155,52 @@ export class OficioComponent implements OnInit {
     this.dialog.closeAll();
   }
 
-  // Nueva función para manejar la selección de archivos
-  openFileSelector(): void {
-    // Obtén el elemento de entrada de archivo y simula el clic para abrir el selector
+  // Selector de archivos
+  openFileSelector(oficio: any): void {
+    if (!oficio || !oficio.id) {
+      alert('Por favor, selecciona un oficio antes de subir un archivo.');
+      return;
+    }
+  
+    // Guarda el ID del oficio seleccionado
+    this.oficio = oficio;
+  
+    // Obtén el elemento de entrada de archivo y simula el clic
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
-      fileInput.click();  // Activa la selección de archivos
+      fileInput.click();
     }
   }
   
   onFileSelected(event: any): void {
     const file = event.target.files[0];
   
-    // Verifica que se haya seleccionado un archivo
     if (!file) {
       alert('No se ha seleccionado ningún archivo.');
       return;
     }
   
-    // Verifica el tipo de archivo
+    if (!this.oficio || !this.oficio.id) {
+      alert('No se ha seleccionado un oficio válido.');
+      return;
+    }
+  
     const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
     if (!allowedTypes.includes(file.type)) {
       alert('Tipo de archivo no permitido. Solo se permiten archivos PDF, JPG y PNG.');
       return;
     }
   
-    // Verifica el tamaño del archivo
     const maxSize = 5 * 1024 * 1024; // 5 MB
     if (file.size > maxSize) {
       alert('El archivo excede el tamaño máximo permitido (5MB).');
       return;
     }
   
-    console.log('Archivo seleccionado:', file);
-  
     const formData = new FormData();
-    formData.append('file', file); // El archivo se agrega al FormData
+    formData.append('file', file);
+    formData.append('id', this.oficio.id); // Agregar el ID del oficio
   
-    // Llamar al servicio API para almacenar el archivo
     this.apiService.archivarDocumento(formData).subscribe({
       next: (response) => {
         if (response.status === 'success') {
@@ -215,9 +218,9 @@ export class OficioComponent implements OnInit {
     // Restablecer el input de archivo
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
-      fileInput.value = ''; // Restablece el valor del input
+      fileInput.value = '';
     }
   }
   
-  
+ 
 }

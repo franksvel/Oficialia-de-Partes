@@ -42,7 +42,7 @@
 
     <!-- Tabla de Oficios -->
     <div *ngIf="oficios.length">
-      <table mat-table [dataSource]="oficios">
+      <table mat-table [dataSource]="oficios" class="mat-elevation-z8">
         <!-- Definición de columnas -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -73,7 +73,7 @@
             <button mat-icon-button (click)="onDelete(oficio)">
               <mat-icon>delete</mat-icon>
             </button>
-            <button mat-icon-button (click)="openFileSelector()">
+            <button mat-icon-button (click)="openFileSelector(oficio)">
               <mat-icon>archive</mat-icon>
             </button>
           </td>
@@ -88,4 +88,4 @@
 </mat-sidenav-container>
 
 <!-- Input de tipo file oculto -->
-<input type="file" id="fileInput" style="display: none" (change)="onFileSelected($event)" />
+<input type="file" id="fileInput" style="display: none" (change)="onFileSelected($event)" accept=".pdf,.jpg,.png" />
