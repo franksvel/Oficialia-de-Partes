@@ -9,6 +9,6 @@ export class AuthService {
 
   login(email: string, password: string) {
     // Aquí harías una solicitud HTTP a tu API
-    return this.http.post('http://tu-api.com/login', { email, password });
+    return this.http.post('http://localhost:4200/login', { email, password });
   }
 }

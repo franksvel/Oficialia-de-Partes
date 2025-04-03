@@ -120,5 +120,26 @@ export class ApiService {
         })
       );
   }
+  getRoles(): Observable<any> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.get<any>(`${this.apiUrl}/roles.php`, { headers });
+  }
 
+  // Agregar un nuevo rol
+  addRole(role: any): Observable<any> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.post<any>(`${this.apiUrl}/roles.php?action=add`, role, { headers });
+  }
+
+  // Editar un rol
+  editRole(role: any): Observable<any> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.post<any>(`${this.apiUrl}/roles.php?action=edit`, role, { headers });
+  }
+
+  // Eliminar un rol
+  deleteRole(roleId: number): Observable<any> {
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.http.post<any>(`${this.apiUrl}/roles.php?action=delete`, { index: roleId }, { headers });
+  }
 }

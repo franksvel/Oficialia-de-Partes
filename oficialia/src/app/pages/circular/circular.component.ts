@@ -42,6 +42,10 @@ export class CircularComponent {
     this.router.navigate(['/login']);
   }
 
+ 
+
+
+
   enviarCircular(): void {
     console.log('Circular Enviada:', {
       ...this.datosGeneralesForm.value,

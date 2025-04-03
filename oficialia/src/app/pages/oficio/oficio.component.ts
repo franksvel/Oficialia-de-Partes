@@ -26,7 +26,7 @@ export class OficioComponent implements OnInit {
       shareReplay()
     );
 
-  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'acciones'];
+  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto','archivo', 'acciones'];
 
   isEditMode = false;
   oficio = {
@@ -155,17 +155,14 @@ export class OficioComponent implements OnInit {
     this.dialog.closeAll();
   }
 
-  // Selector de archivos
   openFileSelector(oficio: any): void {
     if (!oficio || !oficio.id) {
       alert('Por favor, selecciona un oficio antes de subir un archivo.');
       return;
     }
   
-    // Guarda el ID del oficio seleccionado
     this.oficio = oficio;
   
-    // Obtén el elemento de entrada de archivo y simula el clic
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
@@ -185,26 +182,15 @@ export class OficioComponent implements OnInit {
       return;
     }
   
-    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'];
-    if (!allowedTypes.includes(file.type)) {
-      alert('Tipo de archivo no permitido. Solo se permiten archivos PDF, JPG y PNG.');
-      return;
-    }
-  
-    const maxSize = 5 * 1024 * 1024; // 5 MB
-    if (file.size > maxSize) {
-      alert('El archivo excede el tamaño máximo permitido (5MB).');
-      return;
-    }
-  
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('id', this.oficio.id); // Agregar el ID del oficio
+    formData.append('id', this.oficio.id);
   
     this.apiService.archivarDocumento(formData).subscribe({
       next: (response) => {
         if (response.status === 'success') {
           alert('Documento archivado correctamente');
+          this.cargarOficios();
         } else {
           alert('Error al archivar el documento');
         }
@@ -214,13 +200,5 @@ export class OficioComponent implements OnInit {
         alert('Hubo un error al archivar el documento');
       }
     });
-  
-    // Restablecer el input de archivo
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = '';
-    }
   }
-  
- 
 }
