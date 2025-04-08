@@ -31,7 +31,22 @@ export class ApiService {
         })
       );
   }
+  eliminarCircular(id: number): Observable<any> {
+    if (!id) {
+      console.error('ID inválido para eliminar oficio');
+      return throwError(() => new Error('ID no válido'));
+    }
   
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+    return this.http.delete<any>(`${this.apiUrl}/eliminar_circular.php?id=${id}`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al eliminar el oficio:', error);
+          return throwError(() => new Error('Algo salió mal, intenta de nuevo.'));
+        })
+      );
+  }
   
   
   // Método para registrar un usuario (ya existente)
@@ -96,6 +111,21 @@ export class ApiService {
         })
       );
   }
+  guardarCircular(oficio: any): Observable<any> {
+    const body = oficio;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.post<any>(`${this.apiUrl}/guardar_circular.php`, body, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al guardar el Circular: ', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
+  
   editarOficio(oficio: any): Observable<any> {
     const body = oficio; // El oficio es el objeto que se envía
     const headers = new HttpHeaders({
@@ -103,6 +133,20 @@ export class ApiService {
     });
 
     return this.http.post<any>(`${this.apiUrl}/editar_oficios.php`, body, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al guardar el oficio:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
+  editarCircular(oficio: any): Observable<any> {
+    const body = oficio; // El oficio es el objeto que se envía
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.post<any>(`${this.apiUrl}/editar_circular.php`, body, { headers })
       .pipe(
         catchError(error => {
           console.error('Error al guardar el oficio:', error);

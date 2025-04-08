@@ -1,42 +1,72 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport
-        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-        [mode]="(isHandset$ | async) ? 'over' : 'side'"
-        [opened]="(isHandset$ | async) === false">
-      <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
-      <mat-nav-list class="centered-list">
-        <a mat-list-item routerLink="/main">Inicio</a>
-        <a mat-list-item routerLink="/oficio">Oficio</a>
-        <a mat-list-item routerLink="/circular">Circulares</a>
-        <a mat-list-item routerLink="/agenda">Agenda</a>
-        <a mat-list-item routerLink="/report">Reportes</a>
-        <a mat-list-item routerLink="/user">Permisos y Roles</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar color="primary">
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+               [mode]="(isHandset$ | async) ? 'over' : 'side'"
+               [opened]="(isHandset$ | async) === false">
+    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    <mat-nav-list class="centered-list">
+      <a mat-list-item routerLink="/main">Inicio</a>
+      <a mat-list-item routerLink="/oficio">Oficio</a>
+      <a mat-list-item routerLink="/circular">Circulares</a>
+      <a mat-list-item routerLink="/agenda">Agenda</a>
+      <a mat-list-item routerLink="/report">Reportes</a>
+      <a mat-list-item routerLink="/user">Permisos y Roles</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Sistema Integral de Oficialía de Partes</span>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesion</span>
         </button>
-        <span>Sistema Integral de Oficialía de Partes</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-          <mat-icon>account_circle</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onLogout()">
-            <mat-icon>logout</mat-icon>
-            <span>Cerrar Sesion</span>
-          </button>
-        </mat-menu>
-      </mat-toolbar>
-      <div>
-        <h6>Agenda</h6>
-       </div>
+      </mat-menu>
+    </mat-toolbar>
 
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-  
+    <div class="agenda-container">
+      <h2>Agenda</h2>
+
+      <div class="form">
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre de la cita</mat-label>
+          <input matInput [(ngModel)]="nombreCita" placeholder="Nombre">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Fecha</mat-label>
+          <input matInput [(ngModel)]="fechaCita" type="date">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput [(ngModel)]="descripcionCita" placeholder="Descripción"></textarea>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="agregarCita()">Agregar Cita</button>
+      </div>
+
+      <div class="citas-lista">
+        <h3>Citas Programadas:</h3>
+        <mat-list>
+          <mat-list-item *ngFor="let cita of citas">
+            <div class="cita-item">
+              <h4>{{ cita.nombre }}</h4>
+              <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
+              <p>{{ cita.descripcion }}</p>
+              <button mat-icon-button color="warn" (click)="eliminarCita(cita.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+        </mat-list>
+      </div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
