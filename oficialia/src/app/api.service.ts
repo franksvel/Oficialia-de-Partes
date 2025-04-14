@@ -31,6 +31,7 @@ export class ApiService {
         })
       );
   }
+
   eliminarCircular(id: number): Observable<any> {
     if (!id) {
       console.error('ID inválido para eliminar oficio');
@@ -48,14 +49,13 @@ export class ApiService {
       );
   }
   
-  
-  // Método para registrar un usuario (ya existente)
+  // Método para registrar un usuario (actualizado para enviar solo email y password)
   registerUser(email: string, password: string): Observable<any> {
     const body = { email, password };
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
+  
     return this.http.post<any>(`${this.apiUrl}/register.php`, body, { headers })
       .pipe(
         catchError(error => {
@@ -71,7 +71,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
+  
     return this.http.post<any>(`${this.apiUrl}/login.php`, body, { headers })
       .pipe(
         catchError(error => {
@@ -86,7 +86,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
+  
     return this.http.get<any>(`${this.apiUrl}/obtener_oficios.php`, { headers })
       .pipe(
         catchError(error => {
@@ -102,7 +102,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
+  
     return this.http.post<any>(`${this.apiUrl}/guardar_oficio.php`, body, { headers })
       .pipe(
         catchError(error => {
@@ -111,6 +111,7 @@ export class ApiService {
         })
       );
   }
+  
   guardarCircular(oficio: any): Observable<any> {
     const body = oficio;
     const headers = new HttpHeaders({
@@ -131,7 +132,7 @@ export class ApiService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
+  
     return this.http.post<any>(`${this.apiUrl}/editar_oficios.php`, body, { headers })
       .pipe(
         catchError(error => {
@@ -140,12 +141,13 @@ export class ApiService {
         })
       );
   }
+  
   editarCircular(oficio: any): Observable<any> {
     const body = oficio; // El oficio es el objeto que se envía
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
+  
     return this.http.post<any>(`${this.apiUrl}/editar_circular.php`, body, { headers })
       .pipe(
         catchError(error => {
@@ -154,6 +156,7 @@ export class ApiService {
         })
       );
   }
+  
   archivarDocumento(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
     return this.http.post<any>(`${this.apiUrl}/archivar_oficio.php`, formData, { headers })
@@ -164,23 +167,24 @@ export class ApiService {
         })
       );
   }
+  
   getRoles(): Observable<any> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.get<any>(`${this.apiUrl}/roles.php`, { headers });
   }
-
+  
   // Agregar un nuevo rol
   addRole(role: any): Observable<any> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<any>(`${this.apiUrl}/roles.php?action=add`, role, { headers });
   }
-
+  
   // Editar un rol
   editRole(role: any): Observable<any> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.http.post<any>(`${this.apiUrl}/roles.php?action=edit`, role, { headers });
   }
-
+  
   // Eliminar un rol
   deleteRole(roleId: number): Observable<any> {
     const headers = new HttpHeaders({'Content-Type': 'application/json'});
