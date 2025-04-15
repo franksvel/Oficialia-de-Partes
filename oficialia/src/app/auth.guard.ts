@@ -13,9 +13,8 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    // Verifica si estamos en el navegador antes de acceder a sessionStorage
     if (typeof window !== 'undefined') {
-      const isAuthenticated = sessionStorage.getItem('id');
+      const isAuthenticated = sessionStorage.getItem('user_id');
 
       if (isAuthenticated) {
         return true;
@@ -25,7 +24,6 @@ export class AuthGuard implements CanActivate {
       }
     }
 
-    // Si no estamos en un navegador, simplemente denegamos el acceso
     return false;
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '../../api.service';  // Asegúrate de que la ruta sea correcta
+import { ApiService } from '../../api.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,17 +10,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  
-  loginForm: FormGroup; 
-  message: string = '';  
-  loading: boolean = false; 
+
+  loginForm: FormGroup;
+  message: string = '';
+  loading: boolean = false;
 
   constructor(
-    private fb: FormBuilder, 
-    private apiService: ApiService, 
-    private router: Router 
+    private fb: FormBuilder,
+    private apiService: ApiService,
+    private router: Router
   ) {
-  
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
@@ -39,21 +38,42 @@ export class LoginComponent {
     this.apiService.login(email, password).subscribe({
       next: (response: any) => {
         console.log('Respuesta del login:', response);
+
         if (response && response.status === 'success') {
-          sessionStorage.setItem('id', response.userId);
+          const user = response.user;
+
+          // Verificar si el campo "verificado" está presente
+          if (user.hasOwnProperty('verificado')) {
+            if (user.verificado !== 1) {
+              this.message = 'Por favor, verifica tu correo antes de iniciar sesión.';
+              this.loading = false;
+              return;
+            }
+          } else {
+            console.warn('El campo "verificado" no fue incluido en la respuesta del backend.');
+            this.message = 'No se pudo verificar el estado de tu cuenta. Contacta al administrador.';
+            this.loading = false;
+            return;
+          }
+
+          // Guardar información del usuario
+          sessionStorage.setItem('user_id', user.id);
+          sessionStorage.setItem('email', user.email);
+
           this.message = 'Login exitoso. Bienvenido.';
-          this.router.navigate(['/main']); 
+          this.router.navigate(['/main']);
         } else {
           this.message = response.message || 'Error en el login.';
         }
       },
       error: (error) => {
-        this.message = 'Hubo un error al intentar iniciar sesión.';
-        console.error(error);
+        this.message = 'Hubo un error al intentar iniciar sesión. Verifique los datos y su conexión.';
+        console.error('Error en el login:', error);
       },
       complete: () => {
         this.loading = false;
       }
     });
   }
+
 }
