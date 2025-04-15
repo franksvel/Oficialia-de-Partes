@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
-import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatStepperModule} from '@angular/material/stepper';
@@ -37,7 +36,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { OficioDialogComponent } from './oficio-dialog/oficio-dialog.component';
 import { ReportComponent } from './pages/report/report.component';
 import { UserComponent } from './pages/user/user.component';
-
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 
 
@@ -84,7 +84,8 @@ import { UserComponent } from './pages/user/user.component';
     MatDialogModule,
     MatButtonModule,
     MatStepperModule,
-    
+    MatDatepickerModule,
+    MatNativeDateModule
   
  
 

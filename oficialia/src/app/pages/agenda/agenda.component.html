@@ -3,7 +3,9 @@
                [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    <mat-toolbar>
+      <img src="transporte.png" alt="Logo" class="logo">
+    </mat-toolbar>
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
@@ -13,59 +15,81 @@
       <a mat-list-item routerLink="/user">Permisos y Roles</a>
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    <mat-toolbar color="primary" class="toolbar">
+      <button type="button" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
       <span>Sistema Integral de Oficialía de Partes</span>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="onLogout()">
           <mat-icon>logout</mat-icon>
-          <span>Cerrar Sesion</span>
+          <span>Cerrar Sesión</span>
         </button>
       </mat-menu>
     </mat-toolbar>
 
-    <div class="agenda-container">
-      <h2>Agenda</h2>
+    <div class="agenda-container container mt-4">
+      <ng-template #noCitas>
+        <p>No hay citas para esta fecha.</p>
+      </ng-template>
 
-      <div class="form">
-        <mat-form-field appearance="fill">
-          <mat-label>Nombre de la cita</mat-label>
-          <input matInput [(ngModel)]="nombreCita" placeholder="Nombre">
-        </mat-form-field>
+      <!-- Contenedor con dos columnas -->
+      <div class="grid-container">
+        <!-- Calendario -->
+        <div class="calendario-wrapper">
+          <h3>Agenda</h3>
+          <mat-calendar
+            (selectedChange)="onFechaSeleccionada($event)"
+            [selected]="fechaSeleccionada"
+            [dateClass]="marcarDiasConCitas">
+          </mat-calendar>
+        </div>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Fecha</mat-label>
-          <input matInput [(ngModel)]="fechaCita" type="date">
-        </mat-form-field>
+        <!-- Formulario + Eventos del día -->
+        <div class="agregar-cita">
+          <h4>Agregar nueva cita</h4>
 
-        <mat-form-field appearance="fill">
-          <mat-label>Descripción</mat-label>
-          <textarea matInput [(ngModel)]="descripcionCita" placeholder="Descripción"></textarea>
-        </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Nombre de la cita</mat-label>
+            <input matInput [(ngModel)]="nombreCita">
+          </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="agregarCita()">Agregar Cita</button>
-      </div>
+          <mat-form-field class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput [(ngModel)]="descripcionCita"></textarea>
+          </mat-form-field>
 
-      <div class="citas-lista">
-        <h3>Citas Programadas:</h3>
-        <mat-list>
-          <mat-list-item *ngFor="let cita of citas">
-            <div class="cita-item">
-              <h4>{{ cita.nombre }}</h4>
-              <p><strong>Fecha:</strong> {{ cita.fecha }}</p>
-              <p>{{ cita.descripcion }}</p>
-              <button mat-icon-button color="warn" (click)="eliminarCita(cita.id)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </div>
-          </mat-list-item>
-        </mat-list>
+          <mat-form-field class="full-width">
+            <mat-label>Fecha</mat-label>
+            <input matInput [(ngModel)]="fechaCita" [matDatepicker]="picker" placeholder="Seleccionar fecha">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" (click)="agregarCita()">
+            Agregar Cita
+          </button>
+
+          <!-- Eventos del día debajo del formulario -->
+          <div *ngIf="fechaSeleccionada" class="eventos-dia mt-4">
+            <h4>Citas del {{ fechaSeleccionada | date: 'fullDate' }}</h4>
+            <ng-container *ngIf="citasDelDia.length > 0; else noCitas">
+              <mat-list>
+                <mat-list-item *ngFor="let cita of citasDelDia">
+                  <div class="evento-item">
+                    <strong>{{ cita.nombre }}</strong><br>
+                    <span>{{ cita.descripcion }}</span>
+                  </div>
+                </mat-list-item>
+              </mat-list>
+            </ng-container>
+          </div>
+        </div>
       </div>
     </div>
   </mat-sidenav-content>

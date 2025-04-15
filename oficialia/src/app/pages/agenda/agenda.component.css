@@ -38,4 +38,39 @@
   }
  
   
-  
+  /* Contenedor para el calendario y formulario en dos columnas */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+  gap: 20px; /* Espacio entre las columnas */
+  align-items: start; /* Alinear los elementos al inicio */
+  margin-top: 20px;
+}
+
+.calendario-wrapper {
+  /* Asegura que el calendario se ajuste al tamaño adecuado */
+  width: 100%;
+  max-width: 100%;
+}
+
+.agregar-cita {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  align-self: flex-start;
+}
+
+@media (max-width: 768px) {
+  /* En dispositivos pequeños, hacer una columna */
+  .grid-container {
+    grid-template-columns: 1fr; 
+  }
+}
