@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +11,36 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean> | Promise<boolean> | boolean {
-    if (typeof window !== 'undefined') {
-      const isAuthenticated = sessionStorage.getItem('user_id');
+  ): boolean {
+    const userId = sessionStorage.getItem('user_id');
+    const role = Number(sessionStorage.getItem('id_roles'));
 
-      if (isAuthenticated) {
-        return true;
-      } else {
-        this.router.navigate(['/login']);
-        return false;
-      }
+    // Si no hay sesión, redirige al login
+    if (!userId || !role) {
+      this.router.navigate(['/login']);
+      return false;
     }
 
+    const allowedRoles: number[] = next.data['roles'];
+
+    // Si la ruta es /main, permitimos acceso a todos los roles
+    if (next.routeConfig?.path === 'main') {
+      return true;
+    }
+
+    // Si no se definieron roles en la ruta, permitir el acceso
+    if (!allowedRoles || allowedRoles.length === 0) {
+      return true;
+    }
+
+    // Si el rol del usuario está en la lista permitida, permitir acceso
+    if (allowedRoles.includes(role)) {
+      return true;
+    }
+
+    // Si no, denegar acceso
+    alert('Acceso denegado. No tienes permisos para acceder a esta sección.');
+    this.router.navigate(['/login']);
     return false;
   }
 }

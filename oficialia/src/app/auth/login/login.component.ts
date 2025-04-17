@@ -56,9 +56,17 @@ export class LoginComponent {
             return;
           }
 
+          // Validar que el usuario tenga un rol permitido (1, 2 o 3)
+          if (![1, 2, 3].includes(user.id_roles)) {
+            this.message = 'No tienes permisos para ingresar a la aplicación.';
+            this.loading = false;
+            return;
+          }
+
           // Guardar información del usuario
           sessionStorage.setItem('user_id', user.id);
           sessionStorage.setItem('email', user.email);
+          sessionStorage.setItem('id_roles', user.id_roles); // Guardar el rol
 
           this.message = 'Login exitoso. Bienvenido.';
           this.router.navigate(['/main']);
@@ -75,5 +83,4 @@ export class LoginComponent {
       }
     });
   }
-
 }

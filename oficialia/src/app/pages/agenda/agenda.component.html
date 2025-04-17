@@ -38,9 +38,7 @@
         <p>No hay citas para esta fecha.</p>
       </ng-template>
 
-      <!-- Contenedor con dos columnas -->
       <div class="grid-container">
-        <!-- Calendario -->
         <div class="calendario-wrapper">
           <h3>Agenda</h3>
           <mat-calendar
@@ -50,7 +48,7 @@
           </mat-calendar>
         </div>
 
-        <!-- Formulario + Eventos del día -->
+        
         <div class="agregar-cita">
           <h4>Agregar nueva cita</h4>
 
@@ -75,7 +73,6 @@
             Agregar Cita
           </button>
 
-          <!-- Eventos del día debajo del formulario -->
           <div *ngIf="fechaSeleccionada" class="eventos-dia mt-4">
             <h4>Citas del {{ fechaSeleccionada | date: 'fullDate' }}</h4>
             <ng-container *ngIf="citasDelDia.length > 0; else noCitas">

@@ -13,13 +13,15 @@ import { UserComponent } from './pages/user/user.component';
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'registrer', component: RegistrerComponent},
-  { path: 'main', component: MainComponent, canActivate: [AuthGuard] }, 
-  { path: 'oficio', component: OficioComponent, canActivate: [AuthGuard] }, 
-  { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] }, 
-  { path: 'circular', component: CircularComponent, canActivate: [AuthGuard] },
-  { path: 'report', component: ReportComponent, canActivate: [AuthGuard]},
-  { path: 'user', component: UserComponent}
+  { path: 'registrer', component: RegistrerComponent },
+
+  // Rutas protegidas por roles
+  { path: 'main', component: MainComponent, canActivate: [AuthGuard], data: { roles: [1, 2, 3] } }, // Todos los roles pueden acceder
+  { path: 'oficio', component: OficioComponent, canActivate: [AuthGuard], data: { roles: [1, 2, 3] } },
+  { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard], data: { roles: [1, 3] } },
+  { path: 'circular', component: CircularComponent, canActivate: [AuthGuard], data: { roles: [1, 2, 3] } },
+  { path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } },
+  { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } }
 ];
 
 @NgModule({

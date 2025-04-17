@@ -3,13 +3,16 @@
 
 <mat-dialog-content>
   <mat-form-field appearance="fill">
-    <mat-label>Numero de Oficio</mat-label>
+    <mat-label>Número de Oficio</mat-label>
     <input matInput [(ngModel)]="oficio.numero" name="numero" required />
   </mat-form-field>
 
+  <!-- Campo de fecha con calendario -->
   <mat-form-field appearance="fill">
     <mat-label>Fecha de Recepción</mat-label>
-    <input matInput [(ngModel)]="oficio.fechaRecepcion" name="fechaRecepcion" type="date" required />
+    <input matInput [(ngModel)]="oficio.fechaRecepcion" [matDatepicker]="picker" name="fechaRecepcion" required>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
 
   <mat-form-field appearance="fill">
