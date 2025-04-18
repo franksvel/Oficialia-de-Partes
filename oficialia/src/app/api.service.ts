@@ -15,6 +15,24 @@ export class ApiService {
   
   constructor(private http: HttpClient) { }
 
+
+  eliminarAgenda(id: number): Observable<any> {
+    if (!id) {
+      console.error('ID inválido para eliminar oficio');
+      return throwError(() => new Error('ID no válido'));
+    }
+  
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+    return this.http.delete<any>(`${this.apiUrl}/eliminar_agenda.php?id=${id}`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al eliminar el oficio:', error);
+          return throwError(() => new Error('Algo salió mal, intenta de nuevo.'));
+        })
+      );
+  }
+
   eliminarOficio(id: number): Observable<any> {
     if (!id) {
       console.error('ID inválido para eliminar oficio');
@@ -95,6 +113,19 @@ export class ApiService {
         })
       );
   }
+  obtenerCitas(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get<any>(`${this.apiUrl}/obtener_citas.php`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al obtener los oficios:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
 
   // Método para guardar un oficio
   guardarOficio(oficio: any): Observable<any> {
@@ -111,7 +142,21 @@ export class ApiService {
         })
       );
   }
+  guardarCita(oficio: any): Observable<any> {
+    const body = oficio; // El oficio es el objeto que se envía
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
   
+    return this.http.post<any>(`${this.apiUrl}/guardar_agenda.php`, body, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Error al guardar el oficio:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
+
   guardarCircular(oficio: any): Observable<any> {
     const body = oficio;
     const headers = new HttpHeaders({

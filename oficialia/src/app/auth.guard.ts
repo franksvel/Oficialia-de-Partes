@@ -12,6 +12,12 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): boolean {
+
+    // Validación para evitar errores en entornos sin `window`
+    if (typeof window === 'undefined') {
+      return false;
+    }
+
     const userId = sessionStorage.getItem('user_id');
     const role = Number(sessionStorage.getItem('id_roles'));
 

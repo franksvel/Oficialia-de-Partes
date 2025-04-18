@@ -2,8 +2,10 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, inject, OnInit } from '@angular/core';
 import { map, Observable, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
+import { ApiService } from '../../api.service';
 
 interface Cita {
+nombre_cita: any;
   id: number;
   nombre: string;
   fecha: string;
@@ -17,9 +19,9 @@ interface Cita {
   styleUrls: ['./agenda.component.css']
 })
 export class AgendaComponent implements OnInit {
-  [x: string]: any;
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
+  private apiService = inject(ApiService);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(map(result => result.matches), shareReplay());
@@ -33,49 +35,104 @@ export class AgendaComponent implements OnInit {
   calendarWeeks: any[] = [];
 
   ngOnInit() {
-    this.generarCalendario();
+    this.fechaSeleccionada = new Date();
+    this.obtenerCitas();
   }
 
-  // Método para agregar citas
+  // Obtener citas desde el backend
+  obtenerCitas() {
+    this.apiService.obtenerCitas().subscribe({
+      next: (response) => {
+        if (response.status === 'success') {
+          this.citas = response.data;
+          if (!this.fechaSeleccionada) {
+            this.fechaSeleccionada = new Date();
+          }
+          this.actualizarCitasDelDia();
+          this.generarCalendario();
+        } else {
+          alert('Error al obtener citas');
+        }
+      },
+      error: (error) => {
+        console.error('Error al obtener citas:', error);
+      }
+    });
+  }
+
+  // Agregar una nueva cita
   agregarCita() {
     if (this.nombreCita && this.fechaCita && this.descripcionCita) {
-      const nuevaCita: Cita = {
-        id: this.citas.length + 1,
-        nombre: this.nombreCita,
+      const cita = {
+        nombre_cita: this.nombreCita,
         fecha: this.fechaCita,
         descripcion: this.descripcionCita
       };
-      this.citas.push(nuevaCita);
-      this.nombreCita = '';
-      this.fechaCita = '';
-      this.descripcionCita = '';
-      this.actualizarCitasDelDia();
-      this.generarCalendario();
+
+      this.apiService.guardarCita(cita).subscribe({
+        next: (response) => {
+          if (response.status === 'success') {
+            alert('Cita guardada correctamente');
+            this.obtenerCitas(); // Recargar citas
+            this.nombreCita = '';
+            this.fechaCita = '';
+            this.descripcionCita = '';
+          } else {
+            alert('Error al guardar la cita');
+          }
+        },
+        error: (error) => {
+          console.error('Error al guardar la cita:', error);
+        }
+      });
     }
   }
 
-  // Método para eliminar cita
-  eliminarCita(id: number) {
-    this.citas = this.citas.filter(cita => cita.id !== id);
-    this.actualizarCitasDelDia();
-    this.generarCalendario();
+  // Eliminar cita del backend
+  onDelete(cita: Cita): void {
+    if (!cita?.id) {
+      alert('Error: El ID de la cita es inválido.');
+      return;
+    }
+
+    if (!confirm(`¿Estás seguro de que deseas eliminar la cita con ID ${cita.id}?`)) return;
+
+    this.apiService.eliminarAgenda(cita.id).subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          this.citas = this.citas.filter(c => c.id !== cita.id);
+          alert('Cita eliminada correctamente');
+          this.actualizarCitasDelDia();
+          this.generarCalendario();
+        } else {
+          alert('No se pudo eliminar la cita.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar la cita:', error);
+        alert('Hubo un error al eliminar la cita.');
+      }
+    });
   }
 
-  // Filtrar citas para el día seleccionado
+  // Al hacer clic en un día del calendario
   onFechaSeleccionada(date: Date) {
     this.fechaSeleccionada = date;
     this.actualizarCitasDelDia();
   }
 
-  // Actualizar las citas del día
+  // Mostrar solo las citas de la fecha seleccionada
   actualizarCitasDelDia() {
     if (this.fechaSeleccionada) {
       const fechaStr = this.fechaSeleccionada.toISOString().split('T')[0];
-      this.citasDelDia = this.citas.filter(cita => cita.fecha === fechaStr);
+      this.citasDelDia = this.citas.filter(cita => {
+        const citaFechaStr = new Date(cita.fecha).toISOString().split('T')[0];
+        return citaFechaStr === fechaStr;
+      });
     }
   }
 
-  // Función para generar el calendario
+  // Generar cuadrícula del calendario
   generarCalendario() {
     if (!this.fechaSeleccionada) {
       this.fechaSeleccionada = new Date();
@@ -90,12 +147,10 @@ export class AgendaComponent implements OnInit {
     this.calendarWeeks = [];
     let week = [];
 
-    // Llenar días vacíos antes del primer día
     for (let i = 0; i < firstDay; i++) {
       week.push(null);
     }
 
-    // Llenar los días del mes
     for (let day = 1; day <= daysInMonth; day++) {
       week.push({ date: new Date(this.fechaSeleccionada.getFullYear(), this.fechaSeleccionada.getMonth(), day) });
 
@@ -105,27 +160,26 @@ export class AgendaComponent implements OnInit {
       }
     }
 
-    // Llenar la última semana si es necesario
     if (week.length > 0) {
       this.calendarWeeks.push(week);
     }
   }
 
-  // Marcar días con citas
+  // Estilo para marcar días con citas
   marcarDiasConCitas = (date: Date): string => {
     const fechaStr = date.toISOString().split('T')[0];
     const tieneCita = this.citas.some(cita => cita.fecha === fechaStr);
     return tieneCita ? 'cita-dia' : '';
   };
 
-  // Obtener las citas de un día
+  // Tooltip con los nombres de las citas
   obtenerTituloCitas(fecha: Date): string {
     const fechaStr = fecha.toISOString().split('T')[0];
     const citas = this.citas.filter(c => c.fecha === fechaStr);
     return citas.map(c => c.nombre).join(', ');
   }
 
-  // Método para cerrar sesión
+  // Cerrar sesión
   onLogout(): void {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
