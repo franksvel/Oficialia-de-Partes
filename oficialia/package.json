@@ -38,6 +38,7 @@
     "date-fns": "^4.1.0",
     "dhtmlx-suite": "^5.0.1",
     "express": "^4.21.2",
+    "jspdf": "^3.0.1",
     "mongoose": "^8.12.1",
     "primeicons": "^7.0.0",
     "primeng": "^19.0.5",

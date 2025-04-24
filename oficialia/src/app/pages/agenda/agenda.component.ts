@@ -51,11 +51,11 @@ export class AgendaComponent implements OnInit {
           this.actualizarCitasDelDia();
           this.generarCalendario();
         } else {
-          alert('Error al obtener citas');
+          alert('No hay citas almacenadas actualmente');
         }
       },
       error: (error) => {
-        console.error('Error al obtener citas:', error);
+        console.error('No hay citas almacenadas actualmente:', error);
       }
     });
   }
