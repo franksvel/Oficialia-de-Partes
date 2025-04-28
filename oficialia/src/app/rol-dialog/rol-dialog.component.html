@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Cambiar Rol de Usuario</h2>
+
+<mat-dialog-content>
+  <!-- Selección de Usuario -->
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Usuario</mat-label>
+    <mat-select [(value)]="selectedUserId">
+      <mat-option *ngFor="let user of usuarios" [value]="user.id">
+        {{ user.email }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Selección de Nuevo Rol -->
+  <mat-form-field appearance="fill" class="w-full">
+    <mat-label>Nuevo Rol</mat-label>
+    <mat-select [(value)]="selectedRolId">
+      <mat-option *ngFor="let rol of roles" [value]="rol.id">
+        {{ rol.nombre }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <!-- Botón para cerrar el modal sin hacer nada -->
+  <button mat-button (click)="onClose()">Cancelar</button>
+  
+  <!-- Botón para actualizar el rol -->
+  <button mat-raised-button color="primary" (click)="onSubmit()">Actualizar</button>
+</mat-dialog-actions>

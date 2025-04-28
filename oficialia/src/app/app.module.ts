@@ -19,6 +19,8 @@ import { MatListModule } from '@angular/material/list';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatStepperModule} from '@angular/material/stepper';
+import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -38,6 +40,8 @@ import { ReportComponent } from './pages/report/report.component';
 import { UserComponent } from './pages/user/user.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { RolDialogComponent } from './rol-dialog/rol-dialog.component';
+
 
 
 
@@ -56,6 +60,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     OficioDialogComponent,
     ReportComponent,
     UserComponent,
+    RolDialogComponent,
 
     
 
@@ -85,7 +90,9 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatButtonModule,
     MatStepperModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSelectModule,
+    MatOptionModule
   
  
 

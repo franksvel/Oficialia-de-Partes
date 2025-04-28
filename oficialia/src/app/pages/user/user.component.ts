@@ -1,24 +1,29 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { map, Observable, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { ApiService } from '../../api.service';
+import { RolDialogComponent } from '../../rol-dialog/rol-dialog.component';
 
-interface Role {
-  nombre: string;
+interface Usuario {
+  email: string;
+  rol: string | null; // Puede venir como null desde la API
 }
 
 @Component({
   selector: 'app-user',
-  standalone:false,
+  standalone: false,
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
-export class UserComponent {
+export class UserComponent implements OnInit {
 
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private apiService = inject(ApiService);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -26,15 +31,25 @@ export class UserComponent {
       shareReplay()
     );
 
-  roles: MatTableDataSource<Role>;
-  displayedColumns: string[] = ['nombre', 'acciones'];
+  usuarios: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
+  displayedColumns: string[] = ['email', 'rol'];
 
-  constructor(public dialog: MatDialog) {
-    this.roles = new MatTableDataSource<Role>([
-      { nombre: 'Administrador' },
-      { nombre: 'Editor' },
-      { nombre: 'Usuario' }
-    ]);
+  ngOnInit(): void {
+    this.cargarUsuarios();
+  }
+
+  cargarUsuarios(): void {
+    this.apiService.obtenerRoles().subscribe(response => {
+      if (response.status === 'success') {
+        const dataConRolFormateado = response.data.map((usuario: Usuario) => ({
+          ...usuario,
+          rol: usuario.rol || 'Sin rol'
+        }));
+        this.usuarios.data = dataConRolFormateado;
+      } else {
+        console.error('Error al cargar usuarios:', response.message);
+      }
+    });
   }
 
   onLogout(): void {
@@ -46,15 +61,26 @@ export class UserComponent {
     console.log('Método no implementado');
   }
 
-  openRoleDialog(): void {
-    console.log('Abrir diálogo para agregar un rol');
+  cambiarRolUsuario(usuario: Usuario): void {
+    const dialogRef = this.dialog.open(RolDialogComponent, {
+      width: '400px',
+      data: { email: usuario.email }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'updated') {
+        this.cargarUsuarios(); // Recargar lista si se actualizó un rol
+      }
+    });
   }
 
-  editRole(role: Role): void {
-    console.log('Editar rol:', role);
-  }
-
-  deleteRole(role: Role): void {
-    this.roles.data = this.roles.data.filter(r => r !== role);
+  abrirDialogoCambioRol(): void {
+    this.dialog.open(RolDialogComponent, {
+      width: '400px'
+    }).afterClosed().subscribe(result => {
+      if (result === 'updated') {
+        this.cargarUsuarios(); // O actualiza tu lista de usuarios
+      }
+    });
   }
 }

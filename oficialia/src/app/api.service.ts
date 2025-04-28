@@ -8,7 +8,7 @@ import { throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  actualizarOficio(oficio: any) {
+  cambiarRolusuario(email: string, selectedRolId: number) {
     throw new Error('Method not implemented.');
   }
   private apiUrl = 'http://localhost/api'; // Asegúrate de que esta URL esté correcta
@@ -98,15 +98,13 @@ export class ApiService {
         })
       );
   }
-  obtenerUsuariosConRoles(): Observable<any> {
+  obtenerRoles(): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
   
-    return this.http.get<any>(`${this.apiUrl}/obtener_roles.php`, {
-      headers,
-      withCredentials: true
-    }).pipe(
+    return this.http.get<any>(`${this.apiUrl}/obtener_roles.php`, {headers,withCredentials: true})
+      .pipe(
       catchError(error => {
         console.error('Error al obtener los usuarios:', error);
         return throwError(() => new Error('Algo salió mal al obtener los usuarios.'));
@@ -185,6 +183,29 @@ export class ApiService {
         })
       );
   }
+
+  cambiarRolUsuario(id: number, email: string, id_roles: number): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    const body = {
+      id: id,
+      email: email,
+      id_roles: id_roles
+    };
+  
+    return this.http.put<any>(`${this.apiUrl}/cambiar_roles.php`, body, {
+      headers: headers,
+      withCredentials: true
+    }).pipe(
+      catchError(error => {
+        console.error('Error al cambiar el rol del usuario:', error);
+        return throwError(() => new Error('Algo salió mal al cambiar el rol.'));
+      })
+    );
+  }
+  
   
   editarOficio(oficio: any): Observable<any> {
     const body = oficio; // El oficio es el objeto que se envía

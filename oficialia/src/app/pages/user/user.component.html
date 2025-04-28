@@ -1,49 +1,45 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport
-        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-        [mode]="(isHandset$ | async) ? 'over' : 'side'"
-        [opened]="(isHandset$ | async) === false">
-      <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
-      <mat-nav-list class="centered-list">
-        <a mat-list-item routerLink="/main">Inicio</a>
-        <a mat-list-item routerLink="/oficio">Oficio</a>
-        <a mat-list-item routerLink="/circular">Circulares</a>
-        <a mat-list-item routerLink="/agenda">Agenda</a>
-        <a mat-list-item routerLink="/report">Reportes</a>
-        <a mat-list-item routerLink="/user">Permisos y Roles</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar color="primary">
-        <button type="button" mat-icon-button (click)="drawer.toggle()">
-          <mat-icon>menu</mat-icon>
-        </button>
-        <span>Gestión de Permisos y Roles</span>
-      </mat-toolbar>
-      
-      <div class="content">
-        <button mat-raised-button color="primary" (click)="openRoleDialog()">Agregar Rol</button>
-        <mat-table [dataSource]="roles" class="mat-elevation-z8">
-          <ng-container matColumnDef="nombre">
-            <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
-            <mat-cell *matCellDef="let role"> {{role.nombre}} </mat-cell>
-          </ng-container>
-          
-          <ng-container matColumnDef="acciones">
-            <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
-            <mat-cell *matCellDef="let role">
-              <button mat-icon-button (click)="editRole(role)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="deleteRole(role)">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </mat-cell>
-          </ng-container>
-          
-          <mat-header-row *matHeaderRowDef="['nombre', 'acciones']"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: ['nombre', 'acciones'];"></mat-row>
-        </mat-table>
-      </div>
-    </mat-sidenav-content>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false">
+    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    <mat-nav-list class="centered-list">
+      <a mat-list-item routerLink="/main">Inicio</a>
+      <a mat-list-item routerLink="/oficio">Oficio</a>
+      <a mat-list-item routerLink="/circular">Circulares</a>
+      <a mat-list-item routerLink="/agenda">Agenda</a>
+      <a mat-list-item routerLink="/report">Reportes</a>
+      <a mat-list-item routerLink="/user">Permisos y Roles</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button type="button" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="flex-1">Gestión de Permisos y Roles</span>
+    </mat-toolbar>
+    <button mat-raised-button color="accent" (click)="abrirDialogoCambioRol()">
+      Cambiar Rol
+    </button>
+    <div class="content">
+      <mat-table [dataSource]="usuarios" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="email">
+          <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="rol">
+          <mat-header-cell *matHeaderCellDef> Rol </mat-header-cell>
+          <mat-cell *matCellDef="let user"> {{user.rol}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+  </mat-sidenav-content>
 </mat-sidenav-container>
