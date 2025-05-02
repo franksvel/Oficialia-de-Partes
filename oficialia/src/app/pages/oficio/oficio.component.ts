@@ -17,16 +17,16 @@ export class OficioComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
   private dialog = inject(MatDialog);
-  private apiService = inject(ApiService);  
+  private apiService = inject(ApiService);
   private cdr = inject(ChangeDetectorRef);
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
+    map(result => result.matches),
+    shareReplay()
+  );
 
-  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto','archivo', 'acciones'];
+  displayedColumns: string[] = ['numero', 'remitente', 'asunto', 'dependencia', 'estatus', 'archivo', 'acciones'];
+
 
   isEditMode = false;
   oficio = {
@@ -34,9 +34,11 @@ export class OficioComponent implements OnInit {
     numero: '',
     fechaRecepcion: '',
     remitente: '',
-    asunto: ''
+    asunto: '',
+    dependencia:'',
+    estatus: 'pendiente'
   };
-  oficios: any[] = [];  
+  oficios: any[] = [];
 
   ngOnInit(): void {
     this.cargarOficios();
@@ -48,6 +50,8 @@ export class OficioComponent implements OnInit {
         if (response?.status === 'success') {
           this.oficios = response.data;
           this.cdr.detectChanges();
+        } else {
+          alert('Error al cargar los oficios');
         }
       },
       error: (error) => {
@@ -69,11 +73,6 @@ export class OficioComponent implements OnInit {
       }
       this.onResetForm();
     });
-  }
-
-  onLogout(): void {
-    sessionStorage.removeItem('id');
-    this.router.navigate(['/login']);
   }
 
   saveOficio(oficio: any): void {
@@ -110,7 +109,7 @@ export class OficioComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error al actualizar el oficio:', error);
-        alert('Hubo un error al actualizar el oficio. Intente nuevamente.');
+        alert('Hubo un error al actualizar el oficio');
       }
     });
   }
@@ -121,23 +120,23 @@ export class OficioComponent implements OnInit {
       return;
     }
 
-    if (!confirm(`¿Estás seguro de que deseas eliminar el oficio con ID ${oficio.id}?`)) return;
-
-    this.apiService.eliminarOficio(oficio.id).subscribe({
-      next: (response) => {
-        if (response?.status === 'success') {
-          this.oficios = this.oficios.filter(o => o.id !== oficio.id);
-          alert('Oficio eliminado correctamente');
-          this.cdr.detectChanges();
-        } else {
-          alert('No se pudo eliminar el oficio.');
+    if (confirm(`¿Estás seguro de eliminar el oficio con ID ${oficio.id}?`)) {
+      this.apiService.eliminarOficio(oficio.id).subscribe({
+        next: (response) => {
+          if (response?.status === 'success') {
+            this.oficios = this.oficios.filter(o => o.id !== oficio.id);
+            alert('Oficio eliminado correctamente');
+            this.cdr.detectChanges();
+          } else {
+            alert('No se pudo eliminar el oficio.');
+          }
+        },
+        error: (error) => {
+          console.error('Error al eliminar el oficio:', error);
+          alert('Hubo un error al eliminar el oficio.');
         }
-      },
-      error: (error) => {
-        console.error('Error al eliminar el oficio:', error);
-        alert('Hubo un error al eliminar el oficio.');
-      }
-    });
+      });
+    }
   }
 
   onEdit(oficio: any): void {
@@ -148,7 +147,12 @@ export class OficioComponent implements OnInit {
 
   onResetForm(): void {
     this.isEditMode = false;
-    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '' };
+    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '', dependencia:'',estatus:'' };
+  }
+
+  onLogout(): void {
+    sessionStorage.removeItem('id');
+    this.router.navigate(['/login']);
   }
 
   onClose(): void {
@@ -160,35 +164,34 @@ export class OficioComponent implements OnInit {
       alert('Por favor, selecciona un oficio antes de subir un archivo.');
       return;
     }
-  
     this.oficio = oficio;
-  
     const fileInput = document.getElementById('fileInput') as HTMLInputElement;
     if (fileInput) {
       fileInput.click();
     }
   }
-  
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
-  
-    if (!file) {
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input?.files?.length) {
       alert('No se ha seleccionado ningún archivo.');
       return;
     }
-  
-    if (!this.oficio || !this.oficio.id) {
+
+    const file = input.files[0];
+
+    if (!this.oficio?.id) {
       alert('No se ha seleccionado un oficio válido.');
       return;
     }
-  
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('id', this.oficio.id);
-  
+
     this.apiService.archivarDocumento(formData).subscribe({
       next: (response) => {
-        if (response.status === 'success') {
+        if (response?.status === 'success') {
           alert('Documento archivado correctamente');
           this.cargarOficios();
         } else {
@@ -201,4 +204,16 @@ export class OficioComponent implements OnInit {
       }
     });
   }
+
+  abrirArchivo(oficio: any): void {
+    if (!oficio?.archivo) {
+      alert('No hay archivo para visualizar.');
+      return;
+    }
+
+    const url = `http://localhost/api/serve_uploads.php?file=${encodeURIComponent(oficio.archivo)}`;
+    window.open(url, '_blank');
+  }
+
+
 }

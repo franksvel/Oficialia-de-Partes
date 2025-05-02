@@ -3,9 +3,11 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
+    
     <mat-toolbar>
-      <img src="transporte.png" alt="Logo">
+      <img src="transporte.png" alt="Logo transporte">
     </mat-toolbar>
+
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
@@ -18,15 +20,11 @@
 
   <mat-sidenav-content>
     <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
       <span>Sistema Integral de Oficialía de Partes</span>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menú de usuario">
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -37,70 +35,82 @@
       </mat-menu>
     </mat-toolbar>
 
-    <h6>Lista de Oficios</h6>
-    <button mat-raised-button color="primary" (click)="openOficioDialog()">Nuevo Oficio</button>
-    <button mat-raised-button color="primary">Asignacion de Dependencias</button>
+    <div class="content">
+      <h6>Lista de Oficios</h6>
+      <button mat-raised-button color="primary" (click)="openOficioDialog()">Nuevo Oficio</button>
 
-    <!-- Tabla de Oficios -->
-    <div *ngIf="oficios.length">
-      <table mat-table [dataSource]="oficios" class="mat-elevation-z8">
-        <!-- Definición de columnas -->
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef class="hidden"> ID </th>
-          <td mat-cell *matCellDef="let oficio" class="hidden">{{ oficio.id ? oficio.id : 'ID no disponible' }}</td>
-        </ng-container>
-        
-        <ng-container matColumnDef="numero">
-          <th mat-header-cell *matHeaderCellDef> Número </th>
-          <td mat-cell *matCellDef="let oficio">{{ oficio.numero }}</td>
-        </ng-container>
+      <!-- Tabla de Oficios -->
+      <div *ngIf="oficios && oficios.length > 0; else noData">
+        <table mat-table [dataSource]="oficios" class="mat-elevation-z8">
 
-        <ng-container matColumnDef="remitente">
-          <th mat-header-cell *matHeaderCellDef> Remitente </th>
-          <td mat-cell *matCellDef="let oficio">{{ oficio.remitente }}</td>
-        </ng-container>
+          <!-- ID oculto -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="hidden">ID</th>
+            <td mat-cell *matCellDef="let oficio" class="hidden">{{ oficio.id }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="asunto">
-          <th mat-header-cell *matHeaderCellDef> Asunto </th>
-          <td mat-cell *matCellDef="let oficio">{{ oficio.asunto }}</td>
-        </ng-container>
+          <ng-container matColumnDef="numero">
+            <th mat-header-cell *matHeaderCellDef> Número </th>
+            <td mat-cell *matCellDef="let oficio">{{ oficio.numero }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="archivo">
-          <th mat-header-cell *matHeaderCellDef>Archivo</th>
-          <td mat-cell *matCellDef="let oficio">
-            <!-- Mostrar el nombre del archivo si existe -->
-            <a *ngIf="oficio.archivo" [href]="'/uploads' + oficio.archivo" target="_blank">
-              {{ oficio.archivo }}
-            </a>
-            
-            <!-- Si no hay archivo adjunto -->
-            <span *ngIf="!oficio.archivo">No adjunto</span>
-          </td>
-        </ng-container>
-        
+          <ng-container matColumnDef="remitente">
+            <th mat-header-cell *matHeaderCellDef> Remitente </th>
+            <td mat-cell *matCellDef="let oficio">{{ oficio.remitente }}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef> Acciones </th>
-          <td mat-cell *matCellDef="let oficio">
-            <button mat-icon-button (click)="onEdit(oficio)">
-              <mat-icon>edit</mat-icon>
-            </button>
-            <button mat-icon-button (click)="onDelete(oficio)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <button mat-icon-button (click)="openFileSelector(oficio)">
-              <mat-icon>archive</mat-icon>
-            </button>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="asunto">
+            <th mat-header-cell *matHeaderCellDef> Asunto </th>
+            <td mat-cell *matCellDef="let oficio">{{ oficio.asunto }}</td>
+          </ng-container>
 
-        <!-- Filas y celdas -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+          <ng-container matColumnDef="dependencia">
+            <th mat-header-cell *matHeaderCellDef> Dependencia </th>
+            <td mat-cell *matCellDef="let oficio">{{ oficio.dependencia }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="estatus">
+            <th mat-header-cell *matHeaderCellDef> Estatus </th>
+            <td mat-cell *matCellDef="let oficio">{{ oficio.estatus }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="archivo">
+            <th mat-header-cell *matHeaderCellDef> Archivo </th>
+            <td mat-cell *matCellDef="let oficio">
+              <a *ngIf="oficio.archivo" (click)="abrirArchivo(oficio)" style="cursor: pointer;">
+                Ver Documento
+              </a>
+              <span *ngIf="!oficio.archivo">No adjunto</span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <td mat-cell *matCellDef="let oficio">
+              <button mat-icon-button (click)="onEdit(oficio)">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button (click)="onDelete(oficio)">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button (click)="openFileSelector(oficio)">
+                <mat-icon>archive</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <!-- Cabeceras y filas -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      <ng-template #noData>
+        <p>No hay oficios registrados.</p>
+      </ng-template>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-<!-- Input de tipo file oculto -->
+ 
+<!-- Input de archivo oculto -->
 <input type="file" id="fileInput" style="display: none" (change)="onFileSelected($event)" accept=".pdf,.jpg,.png" />

@@ -4,12 +4,13 @@ import { map, Observable, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar'; // ✅ Importación añadida
 import { ApiService } from '../../api.service';
-import { RolDialogComponent } from '../../rol-dialog/rol-dialog.component';
 
 interface Usuario {
+  id: number; // ✅ Asegúrate de que el ID esté definido
   email: string;
-  rol: string | null; // Puede venir como null desde la API
+  rol: string | null;
 }
 
 @Component({
@@ -24,6 +25,7 @@ export class UserComponent implements OnInit {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private apiService = inject(ApiService);
+  private snackBar = inject(MatSnackBar); // ✅ Inyección añadida
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -36,10 +38,11 @@ export class UserComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarUsuarios();
+    this.cargarRoles();
   }
-
+  rolChanged: boolean = false;
   cargarUsuarios(): void {
-    this.apiService.obtenerRoles().subscribe(response => {
+    this.apiService.obtenerUsuario().subscribe(response => {
       if (response.status === 'success') {
         const dataConRolFormateado = response.data.map((usuario: Usuario) => ({
           ...usuario,
@@ -61,26 +64,73 @@ export class UserComponent implements OnInit {
     console.log('Método no implementado');
   }
 
-  cambiarRolUsuario(usuario: Usuario): void {
-    const dialogRef = this.dialog.open(RolDialogComponent, {
-      width: '400px',
-      data: { email: usuario.email }
+  actualizarRol(user: any): void {
+    if (!user.id || !user.email || !user.id_roles) {
+      console.error('Faltan datos requeridos (id, email, id_roles)');
+      return;
+    }
+  
+    // Verificar si el rol ha cambiado antes de hacer la solicitud
+    if (user.id_roles === user.id_roles_original) {
+      console.log(`Sin cambios: el rol de ${user.email} no ha cambiado.`);
+      return;
+    }
+  
+    const datos = {
+      id: user.id,
+      email: user.email,
+      id_roles: user.id_roles
+    };
+  
+    this.apiService.actualizarRol(datos).subscribe(response => {
+      if (response.status === 'success') {
+        console.log(`Rol actualizado correctamente para ${user.email}`);
+        this.cargarUsuarios(); // Recargar usuarios después de la actualización
+      } else {
+        console.error(`Error al actualizar el rol de ${user.email}:`, response.message);
+      }
+    }, error => {
+      console.error(`Error HTTP al actualizar el rol de ${user.email}:`, error);
     });
+  }
+  
+  
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === 'updated') {
-        this.cargarUsuarios(); // Recargar lista si se actualizó un rol
+  roles: any[] = [];
+
+  cargarRoles(): void {
+    this.apiService.obtenerRoles().subscribe(response => {
+      if (response.status === 'success') {
+        this.roles = response.data;
+      } else {
+        console.error('Error al cargar los roles:', response.message);
       }
     });
   }
 
-  abrirDialogoCambioRol(): void {
-    this.dialog.open(RolDialogComponent, {
-      width: '400px'
-    }).afterClosed().subscribe(result => {
-      if (result === 'updated') {
-        this.cargarUsuarios(); // O actualiza tu lista de usuarios
+  guardarCambioRol(): void {
+    this.usuarios.data.forEach(user => {
+      const rolId = Number(user.rol);
+      if (!isNaN(rolId)) {
+        this.apiService.actualizarRol({ id: user.id, id_roles: rolId }).subscribe(response => {
+          if (response.status === 'success') {
+            this.snackBar.open(`Rol de ${user.email} actualizado correctamente.`, 'Cerrar', {
+              duration: 3000
+            });
+          } else {
+            this.snackBar.open(`Error al actualizar el rol de ${user.email}.`, 'Cerrar', {
+              duration: 3000
+            });
+          }
+        });
+      } else {
+        this.snackBar.open(`Rol inválido para ${user.email}. No se pudo actualizar.`, 'Cerrar', {
+          duration: 3000
+        });
       }
     });
+  
+    this.rolChanged = false;
   }
+  
 }

@@ -40,7 +40,8 @@ import { ReportComponent } from './pages/report/report.component';
 import { UserComponent } from './pages/user/user.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { RolDialogComponent } from './rol-dialog/rol-dialog.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -60,7 +61,7 @@ import { RolDialogComponent } from './rol-dialog/rol-dialog.component';
     OficioDialogComponent,
     ReportComponent,
     UserComponent,
-    RolDialogComponent,
+
 
     
 
@@ -92,7 +93,9 @@ import { RolDialogComponent } from './rol-dialog/rol-dialog.component';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
-    MatOptionModule
+    MatOptionModule,
+    LayoutModule,
+    MatSnackBarModule
   
  
 

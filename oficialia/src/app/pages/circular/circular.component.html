@@ -1,8 +1,8 @@
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-      [mode]="(isHandset$ | async) ? 'over' : 'side'"
-      [opened]="(isHandset$ | async) === false">
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false">
     <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
@@ -13,13 +13,14 @@
       <a mat-list-item routerLink="/user">Permisos y Roles</a>
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
     <mat-toolbar color="primary">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>Sistema Integral de Oficialía de Partes</span>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="User menu">
         <mat-icon>account_circle</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -29,58 +30,40 @@
         </button>
       </mat-menu>
     </mat-toolbar>
+    <h6>Nueva Circular</h6>
+    <!-- Contenido principal: Circular estilo documento -->
+    <div class="circular-form">
+      <img src="transporte.png" class="circular">
 
-    <div>
-      <h6>Nueva Circular</h6>
+      <form [formGroup]="circularForm">
+        <mat-form-field class="full-width">
+          <mat-label>Título</mat-label>
+          <input matInput formControlName="titulo">
+        </mat-form-field>
 
-      <!-- Stepper -->
-      <mat-horizontal-stepper #stepper [linear]="true">
-        <!-- Paso 1 -->
-        <mat-step label="Datos Generales">
-          <form [formGroup]="datosGeneralesForm">
-            <mat-form-field class="full-width">
-              <mat-label>Título</mat-label>
-              <input matInput formControlName="titulo">
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <mat-label>Fecha</mat-label>
-              <input matInput formControlName="fecha" type="date">
-            </mat-form-field>
-            <button mat-button matStepperNext [disabled]="!datosGeneralesForm.valid">Siguiente</button>
-          </form>
-        </mat-step>
+        <mat-form-field class="full-width">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="date" formControlName="fecha">
+        </mat-form-field>
 
-        <!-- Paso 2 -->
-        <mat-step label="Detalles de la Circular">
-          <form [formGroup]="detallesForm">
-            <mat-form-field class="full-width">
-              <mat-label>Descripción</mat-label>
-              <textarea matInput formControlName="descripcion"></textarea>
-            </mat-form-field>
-            <mat-form-field class="full-width">
-              <mat-label>Destinatarios</mat-label>
-              <input matInput formControlName="destinatarios">
-            </mat-form-field>
-            <div class="stepper-buttons">
-              <button mat-button matStepperPrevious>Anterior</button>
-              <button mat-button matStepperNext [disabled]="!detallesForm.valid">Siguiente</button>
-            </div>
-          </form>
-        </mat-step>
+        <mat-form-field class="full-width">
+          <mat-label>Descripción</mat-label>
+          <textarea matInput rows="5" formControlName="descripcion"></textarea>
+        </mat-form-field>
 
-        <!-- Paso 3 -->
-        <mat-step label="Confirmación">
-          <p>Revisa los datos antes de enviar:</p>
-          <p><strong>Título:</strong> {{ datosGeneralesForm.value.titulo }}</p>
-          <p><strong>Fecha:</strong> {{ datosGeneralesForm.value.fecha }}</p>
-          <p><strong>Descripción:</strong> {{ detallesForm.value.descripcion }}</p>
-          <p><strong>Destinatarios:</strong> {{ detallesForm.value.destinatarios }}</p>
-          <button mat-button matStepperPrevious>Anterior</button>
-          <button mat-button color="primary" (click)="enviarCircular()">Enviar</button>
-        </mat-step>
-      </mat-horizontal-stepper>
+        <mat-form-field class="full-width">
+          <mat-label>Destinatarios</mat-label>
+          <input matInput formControlName="destinatarios">
+        </mat-form-field>
 
+        <div class="center">
+          <button mat-raised-button color="primary" (click)="enviarCircular()" [disabled]="!circularForm.valid">
+            Guardar Circular
+          </button>
+        </div>
+        <button mat-raised-button color="accent" (click)="imprimirCircular()">Imprimir Circular</button>
+
+      </form>
     </div>
-
   </mat-sidenav-content>
 </mat-sidenav-container>

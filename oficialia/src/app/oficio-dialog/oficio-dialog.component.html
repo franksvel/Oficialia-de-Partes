@@ -25,6 +25,27 @@
     <input matInput [(ngModel)]="oficio.asunto" name="asunto" required />
   </mat-form-field>
 </mat-dialog-content>
+<mat-form-field>
+
+  <mat-label>Estatus</mat-label>
+  <mat-select [(ngModel)]="data.oficio.estatus" name="estatus">
+    <mat-option value="pendiente">Pendiente</mat-option>
+    <mat-option value="en proceso">En proceso</mat-option>
+    <mat-option value="completado">Completado</mat-option>
+  </mat-select>
+</mat-form-field>
+
+
+<mat-form-field appearance="fill">
+  <mat-label>Dependencia</mat-label>
+  <mat-select [(ngModel)]="oficio.dependencia" name="dependencia">
+    <mat-option value="Jurídico">Jurídico</mat-option>
+    <mat-option value="Finanzas">Finanzas</mat-option>
+    <mat-option value="Informática">Informática</mat-option>
+    <mat-option value="Otro">Otro</mat-option>
+  </mat-select>
+</mat-form-field>
+
 
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancelar</button>
