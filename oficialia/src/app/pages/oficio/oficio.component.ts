@@ -25,8 +25,7 @@ export class OficioComponent implements OnInit {
     shareReplay()
   );
 
-  displayedColumns: string[] = ['numero', 'remitente', 'asunto', 'dependencia', 'estatus', 'archivo', 'acciones'];
-
+  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'archivo','estatus','acciones', 'dependencia'];
 
   isEditMode = false;
   oficio = {
