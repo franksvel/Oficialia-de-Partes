@@ -25,7 +25,7 @@ export class OficioComponent implements OnInit {
     shareReplay()
   );
 
-  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'archivo','estatus','acciones', 'dependencia'];
+  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'archivo','estatus','dependencia','dependencia_des','acciones',];
 
   isEditMode = false;
   oficio = {
@@ -35,7 +35,8 @@ export class OficioComponent implements OnInit {
     remitente: '',
     asunto: '',
     dependencia:'',
-    estatus: 'pendiente'
+    dependencia_des:'',
+    estatus: ''
   };
   oficios: any[] = [];
 
@@ -146,7 +147,7 @@ export class OficioComponent implements OnInit {
 
   onResetForm(): void {
     this.isEditMode = false;
-    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '', dependencia:'',estatus:'' };
+    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '', dependencia:'', dependencia_des:'',estatus:''  };
   }
 
   onLogout(): void {

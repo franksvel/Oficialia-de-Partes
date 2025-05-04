@@ -1,13 +1,12 @@
-<!-- oficio-dialog.component.html -->
 <h2 mat-dialog-title>{{ oficio?.numero ? 'Editar Oficio' : 'Nuevo Oficio' }}</h2>
 
 <mat-dialog-content>
+
   <mat-form-field appearance="fill">
     <mat-label>Número de Oficio</mat-label>
     <input matInput [(ngModel)]="oficio.numero" name="numero" required />
   </mat-form-field>
 
-  <!-- Campo de fecha con calendario -->
   <mat-form-field appearance="fill">
     <mat-label>Fecha de Recepción</mat-label>
     <input matInput [(ngModel)]="oficio.fechaRecepcion" [matDatepicker]="picker" name="fechaRecepcion" required>
@@ -24,30 +23,32 @@
     <mat-label>Asunto</mat-label>
     <input matInput [(ngModel)]="oficio.asunto" name="asunto" required />
   </mat-form-field>
+
+  <!-- Dependencia -->
+  <mat-form-field appearance="fill">
+    <mat-label>Dependencia</mat-label>
+    <input matInput [(ngModel)]="oficio.dependencia" name="dependencia" required />
+  </mat-form-field>
+
+  <!-- Descripción de Dependencia -->
+  <mat-form-field appearance="fill">
+    <mat-label>Dependencia Destino</mat-label>
+    <input matInput [(ngModel)]="oficio.dependencia_des" name="dependencia_des" required />
+  </mat-form-field>
+
+  <!-- Estatus -->
+  <mat-form-field appearance="fill">
+    <mat-label>Estatus</mat-label>
+    <mat-select [(ngModel)]="oficio.estatus" name="estatus">
+      <mat-option value="pendiente">Pendiente</mat-option>
+      <mat-option value="en proceso">En proceso</mat-option>
+      <mat-option value="completado">Completado</mat-option>
+    </mat-select>
+  </mat-form-field>
+
 </mat-dialog-content>
-<mat-form-field>
-
-  <mat-label>Estatus</mat-label>
-  <mat-select [(ngModel)]="data.oficio.estatus" name="estatus">
-    <mat-option value="pendiente">Pendiente</mat-option>
-    <mat-option value="en proceso">En proceso</mat-option>
-    <mat-option value="completado">Completado</mat-option>
-  </mat-select>
-</mat-form-field>
-
-
-<mat-form-field appearance="fill">
-  <mat-label>Dependencia</mat-label>
-  <mat-select [(ngModel)]="oficio.dependencia" name="dependencia">
-    <mat-option value="Jurídico">Jurídico</mat-option>
-    <mat-option value="Finanzas">Finanzas</mat-option>
-    <mat-option value="Informática">Informática</mat-option>
-    <mat-option value="Otro">Otro</mat-option>
-  </mat-select>
-</mat-form-field>
-
 
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Cancelar</button>
-  <button mat-button [mat-dialog-close]="oficio" cdkFocusInitial>Guardar</button>
+  <button mat-button (click)="onSubmit()">Guardar</button>
 </mat-dialog-actions>

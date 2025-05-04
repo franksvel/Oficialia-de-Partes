@@ -49,8 +49,8 @@
 
 .calendario-wrapper {
   /* Asegura que el calendario se ajuste al tamaño adecuado */
-  width: 100%;
-  max-width: 100%;
+  width: 90%;
+  max-width: 85%;
 }
 
 .agregar-cita {

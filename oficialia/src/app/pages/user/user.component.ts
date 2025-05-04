@@ -1,16 +1,24 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { map, Observable, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar'; // ✅ Importación añadida
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../../api.service';
 
 interface Usuario {
-  id: number; // ✅ Asegúrate de que el ID esté definido
+  id: number;
   email: string;
   rol: string | null;
+  id_roles: number;
+  id_roles_original: number;
+}
+
+interface ApiResponse<T> {
+  status: string;
+  message: string;
+  data: T;
 }
 
 @Component({
@@ -25,7 +33,7 @@ export class UserComponent implements OnInit {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private apiService = inject(ApiService);
-  private snackBar = inject(MatSnackBar); // ✅ Inyección añadida
+  private snackBar = inject(MatSnackBar);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -35,102 +43,88 @@ export class UserComponent implements OnInit {
 
   usuarios: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   displayedColumns: string[] = ['email', 'rol'];
+  roles: any[] = [];
 
   ngOnInit(): void {
     this.cargarUsuarios();
     this.cargarRoles();
   }
-  rolChanged: boolean = false;
+
+  // Cargar usuarios y formatear el rol
   cargarUsuarios(): void {
-    this.apiService.obtenerUsuario().subscribe(response => {
-      if (response.status === 'success') {
-        const dataConRolFormateado = response.data.map((usuario: Usuario) => ({
-          ...usuario,
-          rol: usuario.rol || 'Sin rol'
-        }));
-        this.usuarios.data = dataConRolFormateado;
-      } else {
-        console.error('Error al cargar usuarios:', response.message);
-      }
+    this.apiService.obtenerUsuario().subscribe({
+      next: (response: ApiResponse<Usuario[]>) => {
+        if (response.status === 'success') {
+          this.usuarios.data = response.data.map((usuario) => ({
+            ...usuario,
+            rol: usuario.rol || 'Sin rol'
+          }));
+        } else {
+          this.mostrarError('Error al cargar usuarios', response.message);
+        }
+      },
+      error: (error) => this.mostrarError('Error HTTP al cargar usuarios', error)
     });
   }
 
+  // Cargar roles disponibles
+  cargarRoles(): void {
+    this.apiService.obtenerRoles().subscribe({
+      next: (response: ApiResponse<any[]>) => {
+        if (response.status === 'success') {
+          this.roles = response.data;
+        } else {
+          this.mostrarError('Error al cargar roles', response.message);
+        }
+      },
+      error: (error) => this.mostrarError('Error HTTP al cargar roles', error)
+    });
+  }
+
+  // Verificar si el rol ha cambiado
+  verificarCambioRol(user: Usuario): boolean {
+    return user.id_roles !== user.id_roles_original;
+  }
+
+  // Actualizar rol de un usuario
+  actualizarRol(user: Usuario): void {
+    if (!user.id || !user.id_roles) {
+      this.mostrarError('Faltan datos requeridos', 'ID o rol no están definidos');
+      return;
+    }
+
+    if (!this.verificarCambioRol(user)) {
+      console.log(`Sin cambios: el rol de ${user.email || 'usuario'} no ha cambiado.`);
+      return;
+    }
+
+    const datos = {
+      id_usuario: user.id,
+      id_rol: user.id_roles
+    };
+
+    this.apiService.actualizarRol(datos).subscribe({
+      next: (response: ApiResponse<any>) => {
+        if (response.status === 'success') {
+          console.log(`Rol actualizado correctamente para ${user.email || 'usuario'}`);
+          this.cargarUsuarios(); // Recargar usuarios después de actualizar
+        } else {
+          this.mostrarError('Error al actualizar rol', response.message);
+        }
+      },
+      error: (error) => this.mostrarError('Error HTTP al actualizar rol', error)
+    });
+  }
+
+  // Manejar el cierre de sesión
   onLogout(): void {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
   }
 
-  showCrudComponent(): void {
-    console.log('Método no implementado');
+  // Mostrar errores usando MatSnackBar
+  private mostrarError(titulo: string, mensaje: string): void {
+    console.error(titulo, mensaje);
+    this.snackBar.open(`${titulo}: ${mensaje}`, 'Cerrar', { duration: 5000, panelClass: ['error-snackbar'] });
   }
-
-  actualizarRol(user: any): void {
-    if (!user.id || !user.email || !user.id_roles) {
-      console.error('Faltan datos requeridos (id, email, id_roles)');
-      return;
-    }
-  
-    // Verificar si el rol ha cambiado antes de hacer la solicitud
-    if (user.id_roles === user.id_roles_original) {
-      console.log(`Sin cambios: el rol de ${user.email} no ha cambiado.`);
-      return;
-    }
-  
-    const datos = {
-      id: user.id,
-      email: user.email,
-      id_roles: user.id_roles
-    };
-  
-    this.apiService.actualizarRol(datos).subscribe(response => {
-      if (response.status === 'success') {
-        console.log(`Rol actualizado correctamente para ${user.email}`);
-        this.cargarUsuarios(); // Recargar usuarios después de la actualización
-      } else {
-        console.error(`Error al actualizar el rol de ${user.email}:`, response.message);
-      }
-    }, error => {
-      console.error(`Error HTTP al actualizar el rol de ${user.email}:`, error);
-    });
-  }
-  
-  
-
-  roles: any[] = [];
-
-  cargarRoles(): void {
-    this.apiService.obtenerRoles().subscribe(response => {
-      if (response.status === 'success') {
-        this.roles = response.data;
-      } else {
-        console.error('Error al cargar los roles:', response.message);
-      }
-    });
-  }
-
-  guardarCambioRol(): void {
-    this.usuarios.data.forEach(user => {
-      const rolId = Number(user.rol);
-      if (!isNaN(rolId)) {
-        this.apiService.actualizarRol({ id: user.id, id_roles: rolId }).subscribe(response => {
-          if (response.status === 'success') {
-            this.snackBar.open(`Rol de ${user.email} actualizado correctamente.`, 'Cerrar', {
-              duration: 3000
-            });
-          } else {
-            this.snackBar.open(`Error al actualizar el rol de ${user.email}.`, 'Cerrar', {
-              duration: 3000
-            });
-          }
-        });
-      } else {
-        this.snackBar.open(`Rol inválido para ${user.email}. No se pudo actualizar.`, 'Cerrar', {
-          duration: 3000
-        });
-      }
-    });
-  
-    this.rolChanged = false;
-  }
-  
 }

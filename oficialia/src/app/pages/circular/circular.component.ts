@@ -6,12 +6,11 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../api.service';
 import jsPDF from 'jspdf';
 
-
 @Component({
   selector: 'app-circular',
   standalone: false,
   templateUrl: './circular.component.html',
-  styleUrl: './circular.component.css'
+  styleUrls: ['./circular.component.css']
 })
 export class CircularComponent {
 
@@ -68,7 +67,7 @@ export class CircularComponent {
       next: (response) => {
         console.log('Circular guardada exitosamente:', response);
         alert('Circular enviada con éxito');
-
+        
         // Reiniciar formularios
         this.datosGeneralesForm.reset();
         this.detallesForm.reset();
@@ -82,30 +81,32 @@ export class CircularComponent {
 
   imprimirCircular(): void {
     const doc = new jsPDF();
-  
-    const titulo = this.datosGeneralesForm.value.titulo;
-    const fecha = this.datosGeneralesForm.value.fecha;
-    const descripcion = this.detallesForm.value.descripcion;
-    const destinatarios = this.detallesForm.value.destinatarios;
-  
-    // Encabezado
+    const { titulo, fecha, descripcion, destinatarios } = this.circularForm.value;
+
+    // Cargar logotipo
+    const logoPath = 'assets/logotipo.png'; // Ruta de la imagen del logo
+    
+    doc.addImage(logoPath, 'PNG', 10, 10, 50, 50); // Agregar logo al documento
+
+    // Agregar título y datos
     doc.setFontSize(18);
-    doc.text('Circular Oficial', 20, 20);
+    doc.text('Circular Oficial', 70, 20);
   
-    // Datos generales
     doc.setFontSize(12);
-    doc.text(`Título: ${titulo}`, 20, 40);
-    doc.text(`Fecha: ${fecha}`, 20, 50);
+    doc.text(`Título: ${titulo}`, 20, 60);
+    doc.text(`Fecha: ${fecha}`, 20, 70);
   
-    // Detalles
-    doc.text('Descripción:', 20, 70);
-    doc.text(doc.splitTextToSize(descripcion, 170), 20, 80);
+    // Descripción
+    doc.text('Descripción:', 20, 90);
+    const descripcionArray = doc.splitTextToSize(descripcion, 170); 
+    doc.text(descripcionArray, 20, 100);
   
-    doc.text('Destinatarios:', 20, 120);
-    doc.text(doc.splitTextToSize(destinatarios, 170), 20, 130);
-  
+    // Destinatarios
+    doc.text('Destinatarios:', 20, 130);
+    const destinatariosArray = doc.splitTextToSize(destinatarios, 170); 
+    doc.text(destinatariosArray, 20, 140);
+
     // Guardar o imprimir
     doc.save('circular.pdf');
   }
 }
-

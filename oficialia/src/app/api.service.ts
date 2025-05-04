@@ -199,11 +199,20 @@ export class ApiService {
   }
 
  
- 
-
-  actualizarRol(datos: { id: number, id_roles: number }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/cambiar_roles.php`, datos, { withCredentials: true });
+  actualizarRol(datos: { id_usuario: number, id_rol: number }): Observable<any> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  
+    return this.http.put(`${this.apiUrl}/updateRole.php`, datos, {
+      headers,
+      withCredentials: true
+    }).pipe(
+      catchError((error) => {
+        console.error('Error al actualizar el rol:', error);
+        return throwError(() => new Error('Error al actualizar el rol'));
+      })
+    );
   }
+  
   
 
   editarOficio(oficio: any): Observable<any> {

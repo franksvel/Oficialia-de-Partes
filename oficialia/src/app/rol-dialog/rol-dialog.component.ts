@@ -65,24 +65,5 @@ export class RolDialogComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  onSubmit(): void {
-    if (this.selectedUserId == null || this.selectedRolId == null) {
-      console.error('Debe seleccionar un usuario y un rol.');
-      return;
-    }
-
-    const usuario = this.usuarios.find(u => u.id === this.selectedUserId);
-    if (!usuario) {
-      console.error('Usuario no encontrado.');
-      return;
-    }
-
-    this.apiService.cambiarRolUsuario(usuario.id, usuario.email, this.selectedRolId).subscribe(response => {
-      if (response.status === 'success') {
-        this.dialogRef.close('updated');
-      } else {
-        console.error('Error al cambiar el rol:', response.message);
-      }
-    });
-  }
+  
 }

@@ -37,61 +37,36 @@
     text-align: center;
   }
   
-
-  .circular-form {
+   /* Estilo del formulario */
+   form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+  .acuse-form-card {
     max-width: 800px;
-    margin: 40px auto;
-    padding: 30px;
-    background: #ffffff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 12px;
-    font-family: 'Segoe UI', sans-serif;
+    margin: 2rem auto;
+    padding: 1rem;
   }
   
   .full-width {
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
   }
   
-  .center {
-    text-align: center;
+  .button-container {
+    text-align: right;
   }
   
-  mat-toolbar mat-icon {
-    margin-right: 8px;
+  .table-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 1rem;
   }
   
-  mat-sidenav {
-    width: 220px;
+  .full-width-table {
+    width: 100%;
+    overflow-x: auto;
   }
   
-
-
-.centered-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-
-.circular-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.circular {
-  max-width: 100px;
-  margin-bottom: 20px;
-  align-self: center;
-}
-
-.full-width {
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}

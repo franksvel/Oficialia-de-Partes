@@ -38,6 +38,7 @@
     <div class="content">
       <h6>Lista de Oficios</h6>
       <button mat-raised-button color="primary" (click)="openOficioDialog()">Nuevo Oficio</button>
+      <button mat-raised-button color="primary" routerLink="/acuse">Generar Acuse</button>
 
       <!-- Tabla de Oficios -->
       <div *ngIf="oficios && oficios.length > 0; else noData">
@@ -67,6 +68,11 @@
           <ng-container matColumnDef="dependencia">
             <th mat-header-cell *matHeaderCellDef> Dependencia </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.dependencia }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="dependencia_des">
+            <th mat-header-cell *matHeaderCellDef> Dependencia Destino </th>
+            <td mat-cell *matCellDef="let oficio"> {{ oficio.dependencia_des }} </td>
           </ng-container>
 
           <ng-container matColumnDef="estatus">

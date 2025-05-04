@@ -1,9 +1,17 @@
 <mat-sidenav-container class="sidenav-container">
+
+  <!-- Sidenav (Menú lateral) -->
   <mat-sidenav #drawer class="sidenav" fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+
+    <!-- Logo en la parte superior del Sidenav -->
+    <mat-toolbar>
+      <img src="transporte.png" alt="Logo">
+    </mat-toolbar>
+
+    <!-- Lista de navegación -->
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
@@ -14,7 +22,10 @@
     </mat-nav-list>
   </mat-sidenav>
 
+  <!-- Contenido Principal -->
   <mat-sidenav-content>
+
+    <!-- Barra de herramientas principal -->
     <mat-toolbar color="primary">
       <button type="button" mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
@@ -22,30 +33,38 @@
       <span class="flex-1">Gestión de Permisos y Roles</span>
     </mat-toolbar>
 
+    <!-- Tabla de usuarios -->
     <div class="content">
       <mat-table [dataSource]="usuarios" class="mat-elevation-z8">
+        
+        <!-- Columna de Email -->
         <ng-container matColumnDef="email">
           <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
-          <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+          <mat-cell *matCellDef="let user"> {{ user.email }} </mat-cell>
         </ng-container>
 
+        <!-- Columna de Roles -->
         <ng-container matColumnDef="rol">
           <mat-header-cell *matHeaderCellDef> Rol </mat-header-cell>
           <mat-cell *matCellDef="let user">
             <mat-select [(ngModel)]="user.id_roles" (selectionChange)="actualizarRol(user)">
-              <mat-option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }}</mat-option>
+              <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                {{ rol.nombre }}
+              </mat-option>
             </mat-select>
           </mat-cell>
         </ng-container>
 
+        <!-- Columna de Permisos -->
+    
+
+        <!-- Filas de la tabla -->
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        
       </mat-table>
-
-      <!-- Botón para guardar cambios de rol -->
-      <button mat-raised-button color="primary" (click)="guardarCambioRol()">
-        Guardar cambio de rol
-      </button>
     </div>
+
   </mat-sidenav-content>
+
 </mat-sidenav-container>

@@ -9,6 +9,7 @@ import { AuthGuard } from './auth.guard';
 import { RegistrerComponent } from './auth/registrer/registrer.component';
 import { ReportComponent } from './pages/report/report.component';
 import { UserComponent } from './pages/user/user.component';
+import { AcuseComponent } from './pages/acuse/acuse.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard], data: { roles: [1, 3] } },
   { path: 'circular', component: CircularComponent, canActivate: [AuthGuard], data: { roles: [1, 2, 3] } },
   { path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } },
-  { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } }
+  { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } },
+  { path: 'acuse', component: AcuseComponent, canActivate:[AuthGuard], data:{roles:[1,2,3]}}
 ];
 
 @NgModule({

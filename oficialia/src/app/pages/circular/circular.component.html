@@ -1,9 +1,14 @@
 <mat-sidenav-container class="sidenav-container">
+  <!-- Sidenav -->
   <mat-sidenav #drawer class="sidenav" fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
+    
+    <!-- Toolbar with logo -->
     <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    
+    <!-- Navigation links -->
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
@@ -14,7 +19,9 @@
     </mat-nav-list>
   </mat-sidenav>
 
+  <!-- Main content -->
   <mat-sidenav-content>
+    <!-- Toolbar with menu button and user options -->
     <mat-toolbar color="primary">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
@@ -30,40 +37,44 @@
         </button>
       </mat-menu>
     </mat-toolbar>
-    <h6>Nueva Circular</h6>
-    <!-- Contenido principal: Circular estilo documento -->
-    <div class="circular-form">
-      <img src="transporte.png" class="circular">
 
-      <form [formGroup]="circularForm">
-        <mat-form-field class="full-width">
-          <mat-label>Título</mat-label>
-          <input matInput formControlName="titulo">
-        </mat-form-field>
+    <!-- Circular form section -->
+    <section class="circular-form-container">
+      <h6>Nueva Circular</h6>
+      <div class="circular-form">
+        <img src="transporte.png" class="circular">
+        
+        <form [formGroup]="circularForm">
+          <mat-form-field class="full-width">
+            <mat-label>Título</mat-label>
+            <input matInput formControlName="titulo">
+          </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <mat-label>Fecha</mat-label>
-          <input matInput type="date" formControlName="fecha">
-        </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Fecha</mat-label>
+            <input matInput type="date" formControlName="fecha">
+          </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <mat-label>Descripción</mat-label>
-          <textarea matInput rows="5" formControlName="descripcion"></textarea>
-        </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput rows="5" formControlName="descripcion"></textarea>
+          </mat-form-field>
 
-        <mat-form-field class="full-width">
-          <mat-label>Destinatarios</mat-label>
-          <input matInput formControlName="destinatarios">
-        </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>Destinatarios</mat-label>
+            <input matInput formControlName="destinatarios">
+          </mat-form-field>
 
-        <div class="center">
-          <button mat-raised-button color="primary" (click)="enviarCircular()" [disabled]="!circularForm.valid">
-            Guardar Circular
-          </button>
-        </div>
-        <button mat-raised-button color="accent" (click)="imprimirCircular()">Imprimir Circular</button>
-
-      </form>
-    </div>
+          <div class="action-buttons">
+            <button mat-raised-button color="primary" (click)="enviarCircular()" [disabled]="!circularForm.valid">
+              Guardar Circular
+            </button>
+            <button mat-raised-button color="accent" (click)="imprimirCircular()">
+              Imprimir Circular
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
   </mat-sidenav-content>
 </mat-sidenav-container>

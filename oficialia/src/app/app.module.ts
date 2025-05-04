@@ -42,6 +42,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AcuseComponent } from './pages/acuse/acuse.component';
 
 
 
@@ -61,6 +62,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     OficioDialogComponent,
     ReportComponent,
     UserComponent,
+    AcuseComponent,
 
 
     
