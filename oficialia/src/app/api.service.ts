@@ -115,7 +115,7 @@ export class ApiService {
       'Content-Type': 'application/json'
     });
   
-    return this.http.get<any>(`${this.apiUrl}/obtener_tramite.php`, { headers , withCredentials:true})
+    return this.http.get<any>(`${this.apiUrl}/obtener_tramite.php`, { headers, withCredentials:true})
       .pipe(
         catchError(error => {
           console.error('Error al obtener los oficios:', error);

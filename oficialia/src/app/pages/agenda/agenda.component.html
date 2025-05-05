@@ -32,7 +32,7 @@
         </button>
       </mat-menu>
     </mat-toolbar>
-
+    <h6>Agenda</h6>
     <div class="agenda-container container mt-4">
       <ng-template #noCitas>
         <p>No hay citas para esta fecha.</p>
@@ -41,7 +41,6 @@
       <div class="grid-container">
         <!-- Calendario -->
         <div class="calendario-wrapper">
-          <h3>Agenda</h3>
           <mat-calendar
             (selectedChange)="onFechaSeleccionada($event)"
             [selected]="fechaSeleccionada"

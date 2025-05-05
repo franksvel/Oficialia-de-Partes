@@ -1,45 +1,80 @@
 <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #drawer class="sidenav" fixedInViewport
-        [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-        [mode]="(isHandset$ | async) ? 'over' : 'side'"
-        [opened]="(isHandset$ | async) === false">
-      <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
-      <mat-nav-list class="centered-list">
-        <a mat-list-item routerLink="/main">Inicio</a>
-        <a mat-list-item routerLink="/oficio">Oficio</a>
-        <a mat-list-item routerLink="/circular">Circulares</a>
-        <a mat-list-item routerLink="/agenda">Agenda</a>
-        <a mat-list-item routerLink="/report">Reportes</a>
-        <a mat-list-item routerLink="/user">Permisos y Roles</a>
-      </mat-nav-list>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <mat-toolbar color="primary">
-        <button
-          type="button"
-          aria-label="Toggle sidenav"
-          mat-icon-button
-          (click)="drawer.toggle()">
-          <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
-        </button>
-        <span>Sistema Integral de Oficialía de Partes</span>
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-          <mat-icon>account_circle</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="onLogout()">
-            <mat-icon>logout</mat-icon>
-            <span>Cerrar Sesion</span>
-          </button>
-        </mat-menu>
-        
-      </mat-toolbar>
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    <mat-nav-list class="centered-list">
+      <a mat-list-item routerLink="/main">Inicio</a>
+      <a mat-list-item routerLink="/oficio">Oficio</a>
+      <a mat-list-item routerLink="/circular">Circulares</a>
+      <a mat-list-item routerLink="/agenda">Agenda</a>
+      <a mat-list-item routerLink="/report">Reportes</a>
+      <a mat-list-item routerLink="/user">Permisos y Roles</a>
+    </mat-nav-list>
+  </mat-sidenav>
 
-      <div>
-       <h6>Oficios en tramite</h6>
-      </div>
-   
-      
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-  
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>Sistema Integral de Oficialía de Partes</span>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesion</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <div>
+      <h6>Oficios en tramite</h6>
+
+      <!-- Tabla de oficios -->
+      <mat-table [dataSource]="oficios">
+        <!-- Columna de número -->
+        <ng-container matColumnDef="numero">
+          <mat-header-cell *matHeaderCellDef> Número </mat-header-cell>
+          <mat-cell *matCellDef="let oficio"> {{ oficio.numero }} </mat-cell>
+        </ng-container>
+
+        <!-- Columna de remitente -->
+        <ng-container matColumnDef="remitente">
+          <mat-header-cell *matHeaderCellDef> Remitente </mat-header-cell>
+          <mat-cell *matCellDef="let oficio"> {{ oficio.remitente }} </mat-cell>
+        </ng-container>
+
+        <!-- Columna de estatus -->
+        <ng-container matColumnDef="estatus">
+          <mat-header-cell *matHeaderCellDef> Estatus </mat-header-cell>
+          <mat-cell *matCellDef="let oficio"> {{ oficio.estatus }} </mat-cell>
+        </ng-container>
+
+        <!-- Columna de dependencia -->
+        <ng-container matColumnDef="dependencia">
+          <mat-header-cell *matHeaderCellDef> Dependencia </mat-header-cell>
+          <mat-cell *matCellDef="let oficio"> {{ oficio.dependencia }} </mat-cell>
+        </ng-container>
+
+        <!-- Columna de dependencia descripción -->
+        <ng-container matColumnDef="dependencia_des">
+          <mat-header-cell *matHeaderCellDef> Dependencia Destino </mat-header-cell>
+          <mat-cell *matCellDef="let oficio"> {{ oficio.dependencia_des }} </mat-cell>
+        </ng-container>
+
+        <!-- Encabezado de la tabla -->
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <!-- Filas de la tabla -->
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+      </mat-table>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

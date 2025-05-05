@@ -1,16 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
-  <!-- Sidenav (Menú lateral) -->
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false">
-
-    <!-- Logo en la parte superior del Sidenav -->
-    <mat-toolbar>
-      <img src="transporte.png" alt="Logo">
-    </mat-toolbar>
-
-    <!-- Lista de navegación -->
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
@@ -20,19 +13,30 @@
       <a mat-list-item routerLink="/user">Permisos y Roles</a>
     </mat-nav-list>
   </mat-sidenav>
-
-  <!-- Contenido Principal -->
   <mat-sidenav-content>
-    <!-- Barra de herramientas principal -->
     <mat-toolbar color="primary">
-      <button type="button" mat-icon-button (click)="drawer.toggle()">
-        <mat-icon>menu</mat-icon>
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span class="flex-1">Gestión de Permisos y Roles</span>
+      <span>Sistema Integral de Oficialía de Partes</span>
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar Sesion</span>
+        </button>
+      </mat-menu>
     </mat-toolbar>
-
-    <!-- Tabla de usuarios -->
-    <div class="content">
+    <div>
+      <h6>Roles del Usuario</h6>
+     </div>
+     <div class="content">
       <mat-table [dataSource]="usuarios" class="mat-elevation-z8">
         
         <!-- Columna de ID (oculta) -->
@@ -66,6 +70,5 @@
         
       </mat-table>
     </div>
-
   </mat-sidenav-content>
 </mat-sidenav-container>
