@@ -73,47 +73,55 @@ export class UserComponent implements OnInit {
   }
 
   // Actualizar rol de un usuario
-  actualizarRol(user: Usuario): void {
-    if (!user.id || !user.id_roles) {
-      this.mostrarError('Faltan datos requeridos', 'ID o rol no están definidos');
-      return;
-    }
-  
-    if (!this.verificarCambioRol(user)) {
-      console.log(`Sin cambios: el rol de ${user.email || 'usuario'} no ha cambiado.`);
-      return;
-    }
-  
-    const datos = {
-      id: user.id,
-      id_roles: user.id_roles
-    };
-  
-    this.apiService.actualizarRol(datos).subscribe({
-      next: (response: any) => {
-        if (response.status === 'success') {
-          console.log(`Rol actualizado correctamente para ${user.email || 'usuario'}`);
-  
-          // Actualiza los datos en la tabla
-          this.usuarios.data = this.usuarios.data.map(u =>
-            u.id === user.id
-              ? {
-                  ...u,
-                  rol: response.user.rol,  // ← Actualizado del backend
-                  id_roles: response.user.id_roles,
-                  id_roles_original: response.user.id_roles
-                }
-              : u
-          );
-  
-          this.mostrarExito('Rol actualizado correctamente');
-        } else {
-          this.mostrarError('Error al actualizar rol', response.message);
-        }
-      },
-      error: (error) => this.mostrarError('Error HTTP al actualizar rol', error)
-    });
+ // Actualizar rol de un usuario
+actualizarRol(user: Usuario): void {
+  if (!user.id || !user.id_roles) {
+    this.mostrarError('Faltan datos requeridos', 'ID o rol no están definidos');
+    return;
   }
+
+  // Verificar si el usuario tiene el rol de 'SuperAdministrador'
+  if (user.rol === 'SuperAdministrador') {
+    this.mostrarError('No se puede modificar el rol de SuperAdministrador', 'Este usuario tiene el rol de SuperAdministrador y no puede ser modificado.');
+    return;
+  }
+
+  if (!this.verificarCambioRol(user)) {
+    console.log(`Sin cambios: el rol de ${user.email || 'usuario'} no ha cambiado.`);
+    return;
+  }
+
+  const datos = {
+    id: user.id,
+    id_roles: user.id_roles
+  };
+
+  this.apiService.actualizarRol(datos).subscribe({
+    next: (response: any) => {
+      if (response.status === 'success') {
+        console.log(`Rol actualizado correctamente para ${user.email || 'usuario'}`);
+
+        // Actualiza los datos en la tabla
+        this.usuarios.data = this.usuarios.data.map(u =>
+          u.id === user.id
+            ? {
+                ...u,
+                rol: response.user.rol,  // ← Actualizado del backend
+                id_roles: response.user.id_roles,
+                id_roles_original: response.user.id_roles
+              }
+            : u
+        );
+
+        this.mostrarExito('Rol actualizado correctamente');
+      } else {
+        this.mostrarError('Error al actualizar rol', response.message);
+      }
+    },
+    error: (error) => this.mostrarError('Error HTTP al actualizar rol', error)
+  });
+}
+
 
   // Mostrar mensaje de éxito
   private mostrarExito(mensaje: string): void {
