@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 @Injectable({
@@ -109,9 +109,7 @@ export class ApiService {
       })
     );
   }
-  obtenerRoles(): Observable<any> {
-    return this.http.get<any>('http://localhost/api/obtener_roles.php', { withCredentials: true });
-  }
+
   obtenerTramite(): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -199,21 +197,39 @@ export class ApiService {
   }
 
  
-  actualizarRol(datos: { id_usuario: number, id_rol: number }): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+  actualizarRol(rol: any): Observable<any> {
+    const body = {
+      id: rol.id,
+      id_roles: rol.id_roles
+    };
   
-    return this.http.put(`${this.apiUrl}/updateRole.php`, datos, {
-      headers,
-      withCredentials: true
-    }).pipe(
-      catchError((error) => {
-        console.error('Error al actualizar el rol:', error);
-        return throwError(() => new Error('Error al actualizar el rol'));
-      })
-    );
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.put<any>(`${this.apiUrl}/updateRole.php`, body, { headers, withCredentials: true })
+      .pipe(
+        catchError(error => {
+          console.error('Error al actualizar el rol: ', error);
+          let errorMessage = 'Algo salió mal; por favor, inténtalo de nuevo más tarde.';
+          
+          if (error.status === 404) {
+            errorMessage = 'No se encontró el recurso solicitado (404).';
+          }
+          
+          if (error.status === 400 && error.error && error.error.message) {
+            errorMessage = error.error.message; // Mostrar mensaje del backend
+          }
+  
+          return throwError(() => new Error(errorMessage));
+        })
+      );
   }
   
   
+  
+  
+ 
 
   editarOficio(oficio: any): Observable<any> {
     const body = oficio; // El oficio es el objeto que se envía

@@ -56,19 +56,23 @@ export class CircularComponent {
   }
 
   enviarCircular(): void {
+    if (this.datosGeneralesForm.invalid || this.detallesForm.invalid) {
+      alert('Por favor completa todos los campos requeridos.');
+      return;
+    }
+  
     const circularData = {
       titulo: this.datosGeneralesForm.value.titulo,
       fecha: this.datosGeneralesForm.value.fecha,
       descripcion: this.detallesForm.value.descripcion,
       destinatario: this.detallesForm.value.destinatarios
     };
-
+  
     this.apiService.guardarCircular(circularData).subscribe({
       next: (response) => {
         console.log('Circular guardada exitosamente:', response);
         alert('Circular enviada con éxito');
-        
-        // Reiniciar formularios
+  
         this.datosGeneralesForm.reset();
         this.detallesForm.reset();
       },
@@ -78,6 +82,7 @@ export class CircularComponent {
       }
     });
   }
+  
 
   imprimirCircular(): void {
     const doc = new jsPDF();

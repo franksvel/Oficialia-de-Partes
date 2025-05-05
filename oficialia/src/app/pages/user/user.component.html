@@ -1,5 +1,4 @@
 <mat-sidenav-container class="sidenav-container">
-
   <!-- Sidenav (Menú lateral) -->
   <mat-sidenav #drawer class="sidenav" fixedInViewport
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
@@ -24,7 +23,6 @@
 
   <!-- Contenido Principal -->
   <mat-sidenav-content>
-
     <!-- Barra de herramientas principal -->
     <mat-toolbar color="primary">
       <button type="button" mat-icon-button (click)="drawer.toggle()">
@@ -37,6 +35,12 @@
     <div class="content">
       <mat-table [dataSource]="usuarios" class="mat-elevation-z8">
         
+        <!-- Columna de ID (oculta) -->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+          <mat-cell *matCellDef="let user" hidden> {{ user.id }} </mat-cell>
+        </ng-container>
+
         <!-- Columna de Email -->
         <ng-container matColumnDef="email">
           <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
@@ -47,6 +51,7 @@
         <ng-container matColumnDef="rol">
           <mat-header-cell *matHeaderCellDef> Rol </mat-header-cell>
           <mat-cell *matCellDef="let user">
+            <!-- Mat-select para elegir el rol -->
             <mat-select [(ngModel)]="user.id_roles" (selectionChange)="actualizarRol(user)">
               <mat-option *ngFor="let rol of roles" [value]="rol.id">
                 {{ rol.nombre }}
@@ -54,9 +59,6 @@
             </mat-select>
           </mat-cell>
         </ng-container>
-
-        <!-- Columna de Permisos -->
-    
 
         <!-- Filas de la tabla -->
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
@@ -66,5 +68,4 @@
     </div>
 
   </mat-sidenav-content>
-
 </mat-sidenav-container>

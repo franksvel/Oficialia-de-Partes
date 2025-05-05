@@ -42,42 +42,28 @@ export class UserComponent implements OnInit {
     );
 
   usuarios: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
-  displayedColumns: string[] = ['email', 'rol'];
+  displayedColumns: string[] = ['id', 'email', 'rol'];  // Asegúrate de tener la columna 'id' en la tabla
   roles: any[] = [];
 
   ngOnInit(): void {
-    this.cargarUsuarios();
-    this.cargarRoles();
+    this.cargarUsuariosYRoles();  // Cargar ambos datos (usuarios y roles)
   }
 
-  // Cargar usuarios y formatear el rol
-  cargarUsuarios(): void {
+  // Cargar usuarios y roles desde el backend
+  cargarUsuariosYRoles(): void {
     this.apiService.obtenerUsuario().subscribe({
-      next: (response: ApiResponse<Usuario[]>) => {
+      next: (response: ApiResponse<{ usuarios: Usuario[], roles: any[] }>) => {
         if (response.status === 'success') {
-          this.usuarios.data = response.data.map((usuario) => ({
+          this.usuarios.data = response.data.usuarios.map((usuario) => ({
             ...usuario,
             rol: usuario.rol || 'Sin rol'
           }));
+          this.roles = response.data.roles;
         } else {
-          this.mostrarError('Error al cargar usuarios', response.message);
+          this.mostrarError('Error al cargar usuarios y roles', response.message);
         }
       },
-      error: (error) => this.mostrarError('Error HTTP al cargar usuarios', error)
-    });
-  }
-
-  // Cargar roles disponibles
-  cargarRoles(): void {
-    this.apiService.obtenerRoles().subscribe({
-      next: (response: ApiResponse<any[]>) => {
-        if (response.status === 'success') {
-          this.roles = response.data;
-        } else {
-          this.mostrarError('Error al cargar roles', response.message);
-        }
-      },
-      error: (error) => this.mostrarError('Error HTTP al cargar roles', error)
+      error: (error) => this.mostrarError('Error HTTP al cargar usuarios y roles', error)
     });
   }
 
@@ -92,28 +78,46 @@ export class UserComponent implements OnInit {
       this.mostrarError('Faltan datos requeridos', 'ID o rol no están definidos');
       return;
     }
-
+  
     if (!this.verificarCambioRol(user)) {
       console.log(`Sin cambios: el rol de ${user.email || 'usuario'} no ha cambiado.`);
       return;
     }
-
+  
     const datos = {
-      id_usuario: user.id,
-      id_rol: user.id_roles
+      id: user.id,
+      id_roles: user.id_roles
     };
-
+  
     this.apiService.actualizarRol(datos).subscribe({
-      next: (response: ApiResponse<any>) => {
+      next: (response: any) => {
         if (response.status === 'success') {
           console.log(`Rol actualizado correctamente para ${user.email || 'usuario'}`);
-          this.cargarUsuarios(); // Recargar usuarios después de actualizar
+  
+          // Actualiza los datos en la tabla
+          this.usuarios.data = this.usuarios.data.map(u =>
+            u.id === user.id
+              ? {
+                  ...u,
+                  rol: response.user.rol,  // ← Actualizado del backend
+                  id_roles: response.user.id_roles,
+                  id_roles_original: response.user.id_roles
+                }
+              : u
+          );
+  
+          this.mostrarExito('Rol actualizado correctamente');
         } else {
           this.mostrarError('Error al actualizar rol', response.message);
         }
       },
       error: (error) => this.mostrarError('Error HTTP al actualizar rol', error)
     });
+  }
+
+  // Mostrar mensaje de éxito
+  private mostrarExito(mensaje: string): void {
+    this.snackBar.open(mensaje, 'Cerrar', { duration: 3000, panelClass: ['success-snackbar'] });
   }
 
   // Manejar el cierre de sesión
