@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, Observable, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
 import { ApiService } from '../../api.service';
-import jsPDF from 'jspdf';
+import { DatePipe } from '@angular/common';
+
 
 @Component({
   selector: 'app-circular',
@@ -13,7 +14,6 @@ import jsPDF from 'jspdf';
   styleUrls: ['./circular.component.css']
 })
 export class CircularComponent {
-
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
   private fb = inject(FormBuilder);
@@ -25,28 +25,15 @@ export class CircularComponent {
       shareReplay()
     );
 
-  datosGeneralesForm: FormGroup;
-  detallesForm: FormGroup;
+  circularForm: FormGroup;
 
-  constructor() {
-    this.datosGeneralesForm = this.fb.group({
-      titulo: ['', Validators.required],
-      fecha: ['', Validators.required]
-    });
-
-    this.detallesForm = this.fb.group({
-      descripcion: ['', Validators.required],
-      destinatarios: ['', Validators.required]
-    });
-  }
-
-  // Getter para combinar los formularios
-  get circularForm(): FormGroup {
-    return this.fb.group({
-      titulo: this.datosGeneralesForm.get('titulo'),
-      fecha: this.datosGeneralesForm.get('fecha'),
-      descripcion: this.detallesForm.get('descripcion'),
-      destinatarios: this.detallesForm.get('destinatarios')
+  constructor(private datePipe: DatePipe) {
+    // Define el formulario con los controles y sus validaciones
+    this.circularForm = this.fb.group({
+      titulo: ['', Validators.required],  // 'titulo' es requerido
+      fecha: ['', Validators.required],   // 'fecha' es requerido
+      descripcion: ['', Validators.required], // 'descripcion' es requerido
+      destinatarios: ['', Validators.required] // 'destinatarios' es requerido
     });
   }
 
@@ -55,63 +42,28 @@ export class CircularComponent {
     this.router.navigate(['/login']);
   }
 
-  enviarCircular(): void {
-    if (this.datosGeneralesForm.invalid || this.detallesForm.invalid) {
-      alert('Por favor completa todos los campos requeridos.');
-      return;
+  guardarCircular(): void {
+    if (this.circularForm.valid) {
+      const circularData = this.circularForm.value;
+  
+      this.apiService.guardarCircular(circularData).subscribe({
+        next: (response) => {
+          console.log('Respuesta del servidor:', response);
+          if (response.status === 'success') {
+            alert('Circular guardada y enviada con éxito.');
+          } else {
+            alert(`Circular guardada, pero no se pudo enviar el correo: ${response.message}`);
+          }
+        },
+        error: (error) => {
+          console.error('Error al guardar la circular:', error);
+          alert('Algo salió mal; por favor, inténtalo de nuevo más tarde.');
+        }
+      });
+    } else {
+      alert('Por favor completa todos los campos del formulario.');
     }
-  
-    const circularData = {
-      titulo: this.datosGeneralesForm.value.titulo,
-      fecha: this.datosGeneralesForm.value.fecha,
-      descripcion: this.detallesForm.value.descripcion,
-      destinatario: this.detallesForm.value.destinatarios
-    };
-  
-    this.apiService.guardarCircular(circularData).subscribe({
-      next: (response) => {
-        console.log('Circular guardada exitosamente:', response);
-        alert('Circular enviada con éxito');
-  
-        this.datosGeneralesForm.reset();
-        this.detallesForm.reset();
-      },
-      error: (err) => {
-        console.error('Error al guardar la circular:', err);
-        alert('Hubo un error al enviar la circular, por favor intentalo más tarde');
-      }
-    });
   }
   
-
-  imprimirCircular(): void {
-    const doc = new jsPDF();
-    const { titulo, fecha, descripcion, destinatarios } = this.circularForm.value;
-
-    // Cargar logotipo
-    const logoPath = 'assets/logotipo.png'; // Ruta de la imagen del logo
-    
-    doc.addImage(logoPath, 'PNG', 10, 10, 50, 50); // Agregar logo al documento
-
-    // Agregar título y datos
-    doc.setFontSize(18);
-    doc.text('Circular Oficial', 70, 20);
   
-    doc.setFontSize(12);
-    doc.text(`Título: ${titulo}`, 20, 60);
-    doc.text(`Fecha: ${fecha}`, 20, 70);
-  
-    // Descripción
-    doc.text('Descripción:', 20, 90);
-    const descripcionArray = doc.splitTextToSize(descripcion, 170); 
-    doc.text(descripcionArray, 20, 100);
-  
-    // Destinatarios
-    doc.text('Destinatarios:', 20, 130);
-    const destinatariosArray = doc.splitTextToSize(destinatarios, 170); 
-    doc.text(destinatariosArray, 20, 140);
-
-    // Guardar o imprimir
-    doc.save('circular.pdf');
-  }
 }

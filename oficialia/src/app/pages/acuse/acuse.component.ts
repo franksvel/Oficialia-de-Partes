@@ -1,15 +1,21 @@
+import { Component, inject, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { AfterViewInit, Component, ViewChild, inject } from '@angular/core';
-import { map, Observable, shareReplay } from 'rxjs';
 import { Router } from '@angular/router';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { map, Observable, shareReplay } from 'rxjs';
+import { ApiService } from '../../api.service';
+import { ChangeDetectorRef } from '@angular/core';
 
-export interface Acuse {
-  id: number;
+interface Acuse {
+  documento: string;
   fecha: string;
-  contenido: string;
+  remitido: string;
+  turnado: string;
+  indicacion: string;
+
 }
 
 @Component({
@@ -18,30 +24,36 @@ export interface Acuse {
   templateUrl: './acuse.component.html',
   styleUrls: ['./acuse.component.css']
 })
-export class AcuseComponent implements AfterViewInit {
+export class AcuseComponent implements OnInit, AfterViewInit {
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private apiService = inject(ApiService);
+  private cdr = inject(ChangeDetectorRef);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(result => result.matches),
     shareReplay()
   );
 
-  // Datos de acuses
-  acuses: Acuse[] = [];
+  displayedColumns: string[] = ['id', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'accion'];
   dataSource = new MatTableDataSource<Acuse>();
-  displayedColumns: string[] = ['id', 'fecha', 'contenido', 'accion'];
 
-  // Campos del formulario
-  nuevoContenido: string = '';
-  nuevoAsunto: string = '';
-  nuevoDestinatario: string = '';
+  isEditMode = false;
 
-  // Referencias al paginador y ordenamiento
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  acuseForm: Acuse = {
+    documento: '',
+    fecha: '',
+    remitido: '',
+    turnado: '',
+    indicacion: '',
 
-  constructor() {
+  };
+
+  ngOnInit(): void {
     this.cargarAcuses();
   }
 
@@ -50,74 +62,69 @@ export class AcuseComponent implements AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
+  cargarAcuses(): void {
+    this.apiService.obtenerAcuse().subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          this.dataSource.data = response.data;
+          this.cdr.detectChanges();
+        } else {
+          alert('Error al cargar los acuses ');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar los acuses:', error);
+        alert('Hubo un error al cargar los acuses');
+      }
+    });
+  }
+
+  aplicarFiltro(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = valor.trim().toLowerCase();
+  }
+
+  saveAcuse(): void {
+    this.apiService.guardarAcuse(this.acuseForm).subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          alert('Oficio guardado correctamente');
+          this.cargarAcuses();
+          this.onResetForm();
+        } else {
+          alert('Hubo un error al guardar el Acuse');
+        }
+      },
+      error: (error) => {
+        console.error('Error al guardar el acuse', error);
+        alert('Hubo un error al guardar el acuse');
+      }
+    });
+  }
+
+  onResetForm(): void {
+    this.isEditMode = false;
+    this.acuseForm = {
+    
+      documento: '',
+      fecha: '',
+      remitido: '',
+      turnado: '',
+      indicacion: '',
+    };
+  }
+
   onLogout(): void {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);
   }
 
-  generarAcuse(): void {
-    if (!this.nuevoContenido || !this.nuevoAsunto || !this.nuevoDestinatario) {
-      alert('Por favor llena todos los campos');
-      return;
-    }
-
-    const nuevoAcuse: Acuse = {
-      id: Date.now(),
-      fecha: new Date().toLocaleString(),
-      contenido: `Asunto: ${this.nuevoAsunto}\nDestinatario: ${this.nuevoDestinatario}\nMensaje: ${this.nuevoContenido}`
-    };
-
-    this.acuses.push(nuevoAcuse);
-    this.guardarAcuses();
-    this.actualizarTabla();
-
-    // Limpiar campos
-    this.nuevoContenido = '';
-    this.nuevoAsunto = '';
-    this.nuevoDestinatario = '';
-  }
-
-  aplicarFiltro(event: Event): void {
-    const filtro = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filtro.trim().toLowerCase();
-  }
-
-  guardarAcuses(): void {
-    localStorage.setItem('acuses', JSON.stringify(this.acuses));
-  }
-
-  cargarAcuses(): void {
-    const data = localStorage.getItem('acuses');
-    if (data) {
-      this.acuses = JSON.parse(data);
-      this.actualizarTabla();
-    }
-  }
-
-  actualizarTabla(): void {
-    this.dataSource.data = this.acuses;
+  onClose(): void {
+    this.dialog.closeAll();
   }
 
   imprimir(acuse: Acuse): void {
-    const ventana = window.open('', '_blank');
-    if (ventana) {
-      ventana.document.write(`
-        <html>
-          <head><title>Imprimir Acuse</title></head>
-          <body>
-            <h1>Acuse</h1>
-            <p><strong>ID:</strong> ${acuse.id}</p>
-            <p><strong>Fecha:</strong> ${acuse.fecha}</p>
-            <p><strong>Contenido:</strong><br>${acuse.contenido.replace(/\n/g, '<br>')}</p>
-            <script>window.print();</script>
-          </body>
-        </html>
-      `);
-      ventana.document.close();
-    }
-  }
-
-  showCrudComponent(): void {
-    console.log('metodo no implementado');
+    console.log('Imprimir acuse:', acuse);
+    // Aquí podrías abrir una ventana nueva o llamar a un servicio de impresión
   }
 }

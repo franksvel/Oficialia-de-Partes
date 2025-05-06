@@ -43,6 +43,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AcuseComponent } from './pages/acuse/acuse.component';
+import { ListacircularComponent } from './pages/listacircular/listacircular.component';
 
 
 
@@ -63,6 +64,7 @@ import { AcuseComponent } from './pages/acuse/acuse.component';
     ReportComponent,
     UserComponent,
     AcuseComponent,
+    ListacircularComponent,
 
 
     

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
 @Injectable({
@@ -138,6 +138,19 @@ export class ApiService {
         })
       );
   }
+  obtenerAcuse(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.get<any>(`${this.apiUrl}/obtener_acuse.php`, { headers , withCredentials:true})
+      .pipe(
+        catchError(error => {
+          console.error('Error al obtener los oficios:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
   obtenerCitas(): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -167,6 +180,20 @@ export class ApiService {
         })
       );
   }
+  guardarAcuse(acuse: any): Observable<any> {
+    const body = acuse; // El oficio es el objeto que se envía
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.post<any>(`${this.apiUrl}/guardar_acuse.php`, body, { headers, withCredentials:true })
+      .pipe(
+        catchError(error => {
+          console.error('Error al guardar el oficio:', error);
+          return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
+        })
+      );
+  }
   guardarCita(oficio: any): Observable<any> {
     const body = oficio; // El oficio es el objeto que se envía
     const headers = new HttpHeaders({
@@ -181,20 +208,26 @@ export class ApiService {
       );
   }
 
-  guardarCircular(oficio: any): Observable<any> {
-    const body = oficio;
+  guardarCircular(circularData: any): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
   
-    return this.http.post<any>(`${this.apiUrl}/guardar_circular.php`, body, { headers , withCredentials:true})
+    return this.http.post<any>(`${this.apiUrl}/guardar_circular.php`, circularData, { headers, withCredentials: true })
       .pipe(
         catchError(error => {
-          console.error('Error al guardar el Circular: ', error);
+          console.error('Error al guardar la circular:', error);
+          if (error.error && error.error.message) {
+            console.error('Error del servidor:', error.error.message);
+          }
           return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
         })
       );
   }
+  
+  
+  
+  
 
  
   actualizarRol(rol: any): Observable<any> {

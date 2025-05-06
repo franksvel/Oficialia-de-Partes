@@ -10,6 +10,7 @@ import { RegistrerComponent } from './auth/registrer/registrer.component';
 import { ReportComponent } from './pages/report/report.component';
 import { UserComponent } from './pages/user/user.component';
 import { AcuseComponent } from './pages/acuse/acuse.component';
+import { ListacircularComponent } from './pages/listacircular/listacircular.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -23,7 +24,8 @@ const routes: Routes = [
   { path: 'circular', component: CircularComponent, canActivate: [AuthGuard], data: { roles: [1, 2, 3] } },
   { path: 'report', component: ReportComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } },
   { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { roles: [1, 2] } },
-  { path: 'acuse', component: AcuseComponent, canActivate:[AuthGuard], data:{roles:[1,2,3]}}
+  { path: 'acuse', component: AcuseComponent, canActivate:[AuthGuard], data:{roles:[1,2,3]}},
+  { path: 'listacircular', component: ListacircularComponent, canActivate:[AuthGuard], data:{roles:[1,2]}}
 ];
 
 @NgModule({
