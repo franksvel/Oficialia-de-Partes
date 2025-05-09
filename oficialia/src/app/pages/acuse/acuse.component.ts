@@ -15,7 +15,7 @@ interface Acuse {
   remitido: string;
   turnado: string;
   indicacion: string;
-
+  asunto: string;
 }
 
 @Component({
@@ -39,7 +39,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
     shareReplay()
   );
 
-  displayedColumns: string[] = ['id', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'accion'];
+  displayedColumns: string[] = ['id', 'asunto', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'accion'];
   dataSource = new MatTableDataSource<Acuse>();
 
   isEditMode = false;
@@ -50,7 +50,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
     remitido: '',
     turnado: '',
     indicacion: '',
-
+    asunto: ''
   };
 
   ngOnInit(): void {
@@ -60,6 +60,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.restorePaginationState(); // Restaurar el estado de la paginación
   }
 
   cargarAcuses(): void {
@@ -67,14 +68,14 @@ export class AcuseComponent implements OnInit, AfterViewInit {
       next: (response) => {
         if (response?.status === 'success') {
           this.dataSource.data = response.data;
+          this.dataSource.paginator = this.paginator; // por si acaso
           this.cdr.detectChanges();
         } else {
-          alert('Error al cargar los acuses ');
+  
         }
       },
       error: (error) => {
         console.error('Error al cargar los acuses:', error);
-        alert('Hubo un error al cargar los acuses');
       }
     });
   }
@@ -105,12 +106,12 @@ export class AcuseComponent implements OnInit, AfterViewInit {
   onResetForm(): void {
     this.isEditMode = false;
     this.acuseForm = {
-    
       documento: '',
       fecha: '',
       remitido: '',
       turnado: '',
       indicacion: '',
+      asunto: ''
     };
   }
 
@@ -123,8 +124,121 @@ export class AcuseComponent implements OnInit, AfterViewInit {
     this.dialog.closeAll();
   }
 
+  // Función para guardar el estado de la paginación
+  onPageChange(event: any): void {
+    sessionStorage.setItem('pageIndex', event.pageIndex.toString());
+    sessionStorage.setItem('pageSize', event.pageSize.toString());
+  }
+
+  // Función para restaurar el estado de la paginación al cargar la página
+  restorePaginationState(): void {
+    const pageIndex = sessionStorage.getItem('pageIndex');
+    const pageSize = sessionStorage.getItem('pageSize');
+
+    if (pageIndex && pageSize) {
+      this.paginator.pageIndex = +pageIndex;
+      this.paginator.pageSize = +pageSize;
+    }
+  }
+
   imprimir(acuse: Acuse): void {
-    console.log('Imprimir acuse:', acuse);
-    // Aquí podrías abrir una ventana nueva o llamar a un servicio de impresión
+    const ventana = window.open('', '_blank', 'width=800,height=600');
+    if (!ventana) return;
+
+    const contenido = `
+      <html>
+      <head>
+        <title>Acuse</title>
+        <style>
+          body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+          }
+          .card {
+            border: 1px solid #000;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+          }
+          .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+          }
+          .header img {
+            width: 35%;
+            margin-right: 10px;
+          }
+          .title {
+            font-size: 20px;
+            font-weight: bold;
+          }
+          .subtitle {
+            font-size: 14px;
+            margin-bottom: 10px;
+          }
+          .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+          }
+          .label {
+            font-weight: bold;
+          }
+          .section {
+            margin-top: 20px;
+          }
+          .observaciones {
+            border: 1px solid #000;
+            height: 100px;
+            margin-top: 10px;
+          }
+          .footer {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 30px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <div class="header">
+            <img src="transporte.png" alt="logo" />
+            <div>
+              <div class="title">DIRECCIÓN GENERAL ADMINISTRATIVA</div>
+              <div class="subtitle">CONTROL Y SEGUIMIENTO DE ASUNTOS</div>
+            </div>
+          </div>
+
+          <div class="value">
+          <div><span class="label">Fecha:</span> ${acuse.fecha}</div>
+|         </div>
+          <div class="value"><span class="label">Documento:</span> ${acuse.documento}</div>
+          <div class="value"><span class="label">Remitido por:</span> ${acuse.remitido}</div>
+          <div class="value"><span class="label">Asunto:</span> ${acuse.asunto}</div>
+          
+          <div class="section">
+            <div><span class="label">Turnado a:</span> ${acuse.turnado}</div>
+            <div><span class="label">Indicaciones:</span> ${acuse.indicacion}</div>
+          </div>
+
+          <div class="section">
+            <span class="label">Observaciones:</span>
+            <div class="observaciones"></div>
+          </div>
+
+        </div>
+
+        <script>
+          window.onload = () => {
+            window.print();
+          };
+        </script>
+      </body>
+      </html>
+    `;
+
+    ventana.document.write(contenido);
+    ventana.document.close();
   }
 }

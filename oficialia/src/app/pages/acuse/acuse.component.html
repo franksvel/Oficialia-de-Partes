@@ -7,13 +7,16 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false"
   >
-    <mat-toolbar><img src="transporte.png" alt="Logo" /></mat-toolbar>
+    <mat-toolbar>
+      <img src="transporte.png" alt="Logo" />
+    </mat-toolbar>
+
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
-      <a mat-list-item routerLink="/circular">Circulares</a>
+      <!-- <a mat-list-item routerLink="/circular">Circulares</a> -->
       <a mat-list-item routerLink="/agenda">Agenda</a>
-      <a mat-list-item routerLink="/report">Reportes</a>
+      <!-- <a mat-list-item routerLink="/report">Reportes</a> -->
       <a mat-list-item routerLink="/user">Permisos y Roles</a>
     </mat-nav-list>
   </mat-sidenav>
@@ -26,9 +29,11 @@
         mat-icon-button
         (click)="drawer.toggle()"
       >
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+        <mat-icon>menu</mat-icon>
       </button>
+
       <span>Sistema Integral de Oficialía de Partes</span>
+
       <button
         mat-icon-button
         [matMenuTriggerFor]="menu"
@@ -36,6 +41,7 @@
       >
         <mat-icon>account_circle</mat-icon>
       </button>
+
       <mat-menu #menu="matMenu">
         <button mat-menu-item (click)="onLogout()">
           <mat-icon>logout</mat-icon>
@@ -44,6 +50,7 @@
       </mat-menu>
     </mat-toolbar>
 
+    <!-- Encabezado de tabla -->
     <div class="table-header">
       <h6>Generar Acuse</h6>
       <mat-form-field appearance="outline" class="filter-field">
@@ -52,9 +59,11 @@
       </mat-form-field>
     </div>
 
+    <!-- Tabla -->
     <div *ngIf="dataSource.data.length > 0" class="table-container">
       <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 full-width-table">
-        <!-- ID Column -->
+
+        <!-- Columnas -->
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
           <td mat-cell *matCellDef="let acuse">{{ acuse.id }}</td>
@@ -62,12 +71,17 @@
 
         <ng-container matColumnDef="fecha">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
-          <td mat-cell *matCellDef="let acuse">{{ acuse.fecha }}</td>
+          <td mat-cell *matCellDef="let acuse">{{ acuse.fecha | date: 'dd/MM/yyyy' }}</td>
         </ng-container>
 
         <ng-container matColumnDef="documento">
           <th mat-header-cell *matHeaderCellDef>Documento</th>
           <td mat-cell *matCellDef="let acuse">{{ acuse.documento }}</td>
+        </ng-container>
+        
+        <ng-container matColumnDef="asunto">
+          <th mat-header-cell *matHeaderCellDef>Asunto</th>
+          <td mat-cell *matCellDef="let acuse">{{ acuse.asunto }}</td>
         </ng-container>
 
         <ng-container matColumnDef="remitido">
@@ -85,13 +99,12 @@
           <td mat-cell *matCellDef="let acuse">{{ acuse.indicacion }}</td>
         </ng-container>
 
-        <!-- Acción -->
         <ng-container matColumnDef="accion">
           <th mat-header-cell *matHeaderCellDef>Acción</th>
           <td mat-cell *matCellDef="let acuse">
-            <!-- <button mat-icon-button color="primary" (click)="imprimir(acuse)">
+            <button mat-icon-button color="primary" (click)="imprimir(acuse)">
               <mat-icon>print</mat-icon>
-            </button> -->
+            </button>
           </td>
         </ng-container>
 
@@ -99,44 +112,52 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
 
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      <mat-paginator [pageSize]="3" [pageSizeOptions]="[3]" showFirstLastButtons></mat-paginator>
     </div>
 
-    <mat-card class="acuse-form-card">
-      <mat-card-content>
-        <form (ngSubmit)="saveAcuse()">
-          <mat-form-field appearance="fill">
-            <mat-label>Fecha de Recepción</mat-label>
-            <input matInput [(ngModel)]="acuseForm.fecha" [matDatepicker]="picker" name="fecha" required>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+    <!-- Formulario -->
+    <div class="form-container">
+      <mat-card class="acuse-form-card">
+        <mat-card-content>
+          <form (ngSubmit)="saveAcuse()">
+            <div class="form-row">
+              <mat-form-field class="full-width">
+                <mat-label>Fecha</mat-label>
+                <input matInput type="date"[(ngModel)]="acuseForm.fecha" name="fecha" required>
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Documento</mat-label>
-            <input matInput [(ngModel)]="acuseForm.documento" name="documento" required />
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Documento</mat-label>
+                <input matInput [(ngModel)]="acuseForm.documento" name="documento" required />
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Remitido</mat-label>
-            <input matInput [(ngModel)]="acuseForm.remitido" name="remitido" required />
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Asunto</mat-label>
+                <input matInput [(ngModel)]="acuseForm.asunto" name="asunto" required />
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Turnado</mat-label>
-            <input matInput [(ngModel)]="acuseForm.turnado" name="turnado" required />
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Remitido</mat-label>
+                <input matInput [(ngModel)]="acuseForm.remitido" name="remitido" required />
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Indicación</mat-label>
-            <textarea matInput rows="5" [(ngModel)]="acuseForm.indicacion" name="indicacion" required></textarea>
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Turnado</mat-label>
+                <input matInput [(ngModel)]="acuseForm.turnado" name="turnado" required />
+              </mat-form-field>
 
-          <div class="button-container">
-            <button mat-raised-button color="primary" type="submit">Generar Acuse</button>
-          </div>
-        </form>
-      </mat-card-content>
-    </mat-card>
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Indicación</mat-label>
+                <textarea matInput rows="5" [(ngModel)]="acuseForm.indicacion" name="indicacion" required></textarea>
+              </mat-form-field>
+            </div>
+
+            <div class="button-container">
+              <button mat-raised-button color="primary" type="submit">Generar Acuse</button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

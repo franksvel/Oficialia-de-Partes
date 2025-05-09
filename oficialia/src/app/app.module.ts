@@ -20,7 +20,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { MatStepperModule} from '@angular/material/stepper';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatOptionModule } from '@angular/material/core';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -44,6 +44,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AcuseComponent } from './pages/acuse/acuse.component';
 import { ListacircularComponent } from './pages/listacircular/listacircular.component';
+
 
 
 
@@ -110,7 +111,8 @@ import { ListacircularComponent } from './pages/listacircular/listacircular.comp
     provideFirebaseApp(() => initializeApp({ projectId: "oficialia-d3a32", appId: "1:849796925257:web:d6279ea69ecb45aee8bc98", storageBucket: "oficialia-d3a32.firebasestorage.app", apiKey: "AIzaSyBBNd7sZ6P-uyQOIVL0qgdtbv4Am7oEkzg", authDomain: "oficialia-d3a32.firebaseapp.com", messagingSenderId: "849796925257", measurementId: "G-6YSJ0BKR92" })),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
-    provideHttpClient(withFetch()) 
+    provideHttpClient(withFetch()) ,
+    { provide: MAT_DATE_LOCALE, useValue: 'es-MX' } 
 
   ],
   bootstrap: [AppComponent]

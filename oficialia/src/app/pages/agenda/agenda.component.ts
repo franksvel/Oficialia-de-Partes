@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../api.service';
 
 interface Cita {
-nombre_cita: any;
+  nombre_cita: any;
   id: number;
   nombre: string;
   fecha: string;
@@ -39,7 +39,6 @@ export class AgendaComponent implements OnInit {
     this.obtenerCitas();
   }
 
-  // Obtener citas desde el backend
   obtenerCitas() {
     this.apiService.obtenerCitas().subscribe({
       next: (response) => {
@@ -60,7 +59,6 @@ export class AgendaComponent implements OnInit {
     });
   }
 
-  // Agregar una nueva cita
   agregarCita() {
     if (this.nombreCita && this.fechaCita && this.descripcionCita) {
       const cita = {
@@ -73,7 +71,7 @@ export class AgendaComponent implements OnInit {
         next: (response) => {
           if (response.status === 'success') {
             alert('Cita guardada correctamente');
-            this.obtenerCitas(); // Recargar citas
+            this.obtenerCitas();
             this.nombreCita = '';
             this.fechaCita = '';
             this.descripcionCita = '';
@@ -88,7 +86,6 @@ export class AgendaComponent implements OnInit {
     }
   }
 
-  // Eliminar cita del backend
   onDelete(cita: Cita): void {
     if (!cita?.id) {
       alert('Error: El ID de la cita es inválido.');
@@ -115,13 +112,11 @@ export class AgendaComponent implements OnInit {
     });
   }
 
-  // Al hacer clic en un día del calendario
   onFechaSeleccionada(date: Date) {
     this.fechaSeleccionada = date;
     this.actualizarCitasDelDia();
   }
 
-  // Mostrar solo las citas de la fecha seleccionada
   actualizarCitasDelDia() {
     if (this.fechaSeleccionada) {
       const fechaStr = this.fechaSeleccionada.toISOString().split('T')[0];
@@ -132,7 +127,6 @@ export class AgendaComponent implements OnInit {
     }
   }
 
-  // Generar cuadrícula del calendario
   generarCalendario() {
     if (!this.fechaSeleccionada) {
       this.fechaSeleccionada = new Date();
@@ -165,21 +159,18 @@ export class AgendaComponent implements OnInit {
     }
   }
 
-  // Estilo para marcar días con citas
   marcarDiasConCitas = (date: Date): string => {
     const fechaStr = date.toISOString().split('T')[0];
     const tieneCita = this.citas.some(cita => cita.fecha === fechaStr);
     return tieneCita ? 'cita-dia' : '';
   };
 
-  // Tooltip con los nombres de las citas
   obtenerTituloCitas(fecha: Date): string {
     const fechaStr = fecha.toISOString().split('T')[0];
     const citas = this.citas.filter(c => c.fecha === fechaStr);
     return citas.map(c => c.nombre).join(', ');
   }
 
-  // Cerrar sesión
   onLogout(): void {
     sessionStorage.removeItem('id');
     this.router.navigate(['/login']);

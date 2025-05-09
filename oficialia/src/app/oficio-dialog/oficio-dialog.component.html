@@ -2,44 +2,47 @@
 
 <mat-dialog-content>
 
-  <mat-form-field appearance="fill">
+  <!-- Número de Oficio -->
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Número de Oficio</mat-label>
     <input matInput [(ngModel)]="oficio.numero" name="numero" required />
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Fecha de Recepción</mat-label>
-    <input matInput [(ngModel)]="oficio.fechaRecepcion" [matDatepicker]="picker" name="fechaRecepcion" required>
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+
+ 
+  <mat-form-field class="full-width">
+    <mat-label>Fecha</mat-label>
+    <input matInput type="date"  [(ngModel)]="oficio.fechaRecepcion" name="fechaRecepcion" required>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <!-- Remitente -->
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Remitente</mat-label>
     <input matInput [(ngModel)]="oficio.remitente" name="remitente" required />
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <!-- Asunto -->
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Asunto</mat-label>
     <input matInput [(ngModel)]="oficio.asunto" name="asunto" required />
   </mat-form-field>
 
   <!-- Dependencia -->
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Dependencia</mat-label>
     <input matInput [(ngModel)]="oficio.dependencia" name="dependencia" required />
   </mat-form-field>
 
-  <!-- Descripción de Dependencia -->
-  <mat-form-field appearance="fill">
-    <mat-label>Dependencia Destino</mat-label>
+  <!-- Área Destino -->
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Área Destino</mat-label>
     <input matInput [(ngModel)]="oficio.dependencia_des" name="dependencia_des" required />
   </mat-form-field>
 
   <!-- Estatus -->
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="full-width">
     <mat-label>Estatus</mat-label>
-    <mat-select [(ngModel)]="oficio.estatus" name="estatus">
+    <mat-select [(ngModel)]="oficio.estatus" name="estatus" required>
       <mat-option value="pendiente">Pendiente</mat-option>
       <mat-option value="en proceso">En proceso</mat-option>
       <mat-option value="completado">Completado</mat-option>
@@ -48,7 +51,7 @@
 
 </mat-dialog-content>
 
-<mat-dialog-actions>
+<mat-dialog-actions align="end">
   <button mat-button (click)="onClose()">Cancelar</button>
-  <button mat-button (click)="onSubmit()">Guardar</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()">Guardar</button>
 </mat-dialog-actions>
