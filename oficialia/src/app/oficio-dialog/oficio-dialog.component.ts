@@ -27,4 +27,10 @@ export class OficioDialogComponent {
   onClose(): void {
     this.dialogRef.close(); // Cierra el modal sin hacer nada
   }
+  CONVERTIR_A_MAYUSCULAS(campo: string): void {
+  if (this.data.oficio[campo]) {
+    this.data.oficio[campo] = this.data.oficio[campo].toUpperCase();
+  }
+}
+
 }

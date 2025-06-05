@@ -4,7 +4,7 @@
                [mode]="(isHandset$ | async) ? 'over' : 'side'"
                [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
-      <img src="transporte.png" alt="Logo" class="logo">
+      <img src="ofipa.png" alt="Logo" class="logo">
     </mat-toolbar>
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
@@ -35,7 +35,7 @@
     <h6>Agenda</h6>
     <div class="agenda-container container mt-4">
       <ng-template #noCitas>
-        <p>No hay citas para esta fecha.</p>
+        <p>No hay oficios para esta fecha.</p>
       </ng-template>
 
       <div class="grid-container">
@@ -50,10 +50,10 @@
 
         <!-- Formulario de cita + lista de eventos -->
         <div class="agregar-cita">
-          <h4>Agregar nueva cita</h4>
+          <h4>Agregar Fecha limite</h4>
 
           <mat-form-field class="full-width">
-            <mat-label>Nombre de la cita</mat-label>
+            <mat-label>Oficio</mat-label>
             <input matInput [(ngModel)]="nombreCita">
           </mat-form-field>
 
@@ -75,7 +75,7 @@
 
           <!-- Citas del día -->
           <div *ngIf="fechaSeleccionada" class="eventos-dia mt-4">
-            <h4>Citas del {{ fechaSeleccionada | date: 'fullDate' }}</h4>
+            <h4> Fecha Limite Oficio {{ fechaSeleccionada | date: 'fullDate' }}</h4>
             <ng-container *ngIf="citasDelDia.length > 0; else noCitas">
               <mat-list>
                 <div *ngFor="let cita of citasDelDia" class="cita-row">

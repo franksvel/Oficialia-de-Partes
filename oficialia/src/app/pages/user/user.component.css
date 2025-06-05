@@ -29,8 +29,9 @@
   }
   
   mat-toolbar img {
-    height: 50px; /* Ajusta el tamaño de la imagen (logo) */
+  height: 140px; /* Ajusta el tamaño de la imagen (logo) */
     width: auto;
+    align-items: center;
   }
   
   .centered-list a {

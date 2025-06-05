@@ -3,11 +3,11 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><img src="transporte.png" alt="Logo"></mat-toolbar>
+    <mat-toolbar><img src="ofipa.png" alt="Logo" /></mat-toolbar>
     <mat-nav-list class="centered-list">
       <a mat-list-item routerLink="/main">Inicio</a>
       <a mat-list-item routerLink="/oficio">Oficio</a>
-      <a mat-list-item routerLink="/circular">Circulares</a>
+      <!-- <a mat-list-item routerLink="/circular">Circulares</a> -->
       <a mat-list-item routerLink="/agenda">Agenda</a>
       <!-- <a mat-list-item routerLink="/report">Reportes</a> -->
       <a mat-list-item routerLink="/user">Permisos y Roles</a>
@@ -15,11 +15,11 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" class="mat-elevation-z4">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>Sistema Integral de Oficialía de Partes</span>
+      <span class="flex-spacer">Sistema Integral de Oficialía de Partes</span>
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="User menu">
         <mat-icon>account_circle</mat-icon>
       </button>
@@ -31,15 +31,15 @@
       </mat-menu>
     </mat-toolbar>
 
-    <h6>Nueva Circular</h6>
+    <h6 class="title">Nueva Circular</h6>
 
     <div class="circular-form">
-      <img src="transporte.png" class="circular">
+      <img src="transporte.png" class="circular" alt="Imagen Circular" />
 
-      <form [formGroup]="circularForm">
+      <form [formGroup]="circularForm" (ngSubmit)="guardarCircular()" novalidate>
         <mat-form-field class="full-width">
           <mat-label>Título</mat-label>
-          <input matInput formControlName="titulo">
+          <input matInput formControlName="titulo" aria-label="Título de la circular" />
           <mat-error *ngIf="circularForm.get('titulo')?.hasError('required')">
             El título es obligatorio.
           </mat-error>
@@ -47,7 +47,7 @@
 
         <mat-form-field class="full-width">
           <mat-label>Fecha</mat-label>
-          <input matInput type="date" formControlName="fecha">
+          <input matInput type="date" formControlName="fecha" aria-label="Fecha de la circular" />
           <mat-error *ngIf="circularForm.get('fecha')?.hasError('required')">
             La fecha es obligatoria.
           </mat-error>
@@ -55,7 +55,7 @@
 
         <mat-form-field class="full-width">
           <mat-label>Descripción</mat-label>
-          <textarea matInput rows="5" formControlName="descripcion"></textarea>
+          <textarea matInput rows="5" formControlName="descripcion" aria-label="Descripción de la circular"></textarea>
           <mat-error *ngIf="circularForm.get('descripcion')?.hasError('required')">
             La descripción es obligatoria.
           </mat-error>
@@ -63,14 +63,14 @@
 
         <mat-form-field class="full-width">
           <mat-label>Destinatarios</mat-label>
-          <input matInput formControlName="destinatarios">
+          <input matInput formControlName="destinatarios" aria-label="Destinatarios de la circular" />
           <mat-error *ngIf="circularForm.get('destinatarios')?.hasError('required')">
             Los destinatarios son obligatorios.
           </mat-error>
         </mat-form-field>
 
         <div class="center">
-          <button mat-raised-button color="primary" (click)="guardarCircular()" [disabled]="!circularForm.valid">
+          <button mat-raised-button color="primary" type="submit" [disabled]="!circularForm.valid">
             Guardar Circular
           </button>
         </div>

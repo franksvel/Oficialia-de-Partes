@@ -133,7 +133,7 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/obtener_oficios.php`, { headers , withCredentials:true})
       .pipe(
         catchError(error => {
-          console.error('Error al obtener los oficios:', error);
+          console.error('No se encontraron oficios almacenados:', error);
           return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
         })
       );
@@ -159,7 +159,7 @@ export class ApiService {
     return this.http.get<any>(`${this.apiUrl}/obtener_citas.php`, { headers, withCredentials:true })
       .pipe(
         catchError(error => {
-          console.error('Error al obtener los oficios:', error);
+          console.error('No se encontraron oficios almacenados:', error);
           return throwError(() => new Error('Algo salió mal; por favor, inténtalo de nuevo más tarde.'));
         })
       );

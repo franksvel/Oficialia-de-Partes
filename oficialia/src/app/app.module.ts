@@ -44,6 +44,9 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AcuseComponent } from './pages/acuse/acuse.component';
 import { ListacircularComponent } from './pages/listacircular/listacircular.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+
 
 
 
@@ -66,6 +69,7 @@ import { ListacircularComponent } from './pages/listacircular/listacircular.comp
     UserComponent,
     AcuseComponent,
     ListacircularComponent,
+    ChatbotComponent,
 
 
     
@@ -101,6 +105,7 @@ import { ListacircularComponent } from './pages/listacircular/listacircular.comp
     MatOptionModule,
     LayoutModule,
     MatSnackBarModule
+    
   
  
 
@@ -115,6 +120,8 @@ import { ListacircularComponent } from './pages/listacircular/listacircular.comp
     { provide: MAT_DATE_LOCALE, useValue: 'es-MX' } 
 
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+
+    schemas: [CUSTOM_ELEMENTS_SCHEMA] 
 })
 export class AppModule { }

@@ -1,46 +1,57 @@
-<div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="row w-100">
-      <div class="col-12 col-md-6 col-lg-4 mx-auto">
-        <div class="card shadow-lg">
-          <div class="card-body">
-            <img class="container" src="al_estilo_jalisco.png" alt="Logo">
-            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-              <div class="mb-4">
-                <label for="email" class="form-label">Correo electrónico</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="email"
-                  formControlName="email"
-                  placeholder="Introduce tu correo"
-                  required
-                />
-                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
-                  El correo es obligatorio y debe ser válido.
-                </div>
-              </div>
-              <div class="mb-4">
-                <label for="password" class="form-label">Contraseña</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  formControlName="password"
-                  placeholder="Introduce tu contraseña"
-                  required
-                />
-                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
-                  La contraseña es obligatoria.
-                </div>
-              </div>
-              <div class="d-grid">
-                <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Iniciar sesión</button>
-              </div>
-            </form>
-            <p *ngIf="message" class="text-danger mt-3">{{ message }}</p>
-          </div>
+<div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
+  <div class="row w-100">
+    <div class="col-12 col-md-8 col-lg-5 mx-auto">
+      <div class="card shadow border-0 rounded-4 p-4">
+        <div class="text-center mb-4">
+          <img src="al_estilo_jalisco.png" alt="Logo" class="mb-3" style="width: 130px;" />
+          <h3 class="mb-1">Iniciar Sesión</h3>
+          <p class="text-muted">Accede a tu cuenta</p>
         </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+          <!-- Correo -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input type="email" class="form-control" id="email" formControlName="email" placeholder="ejemplo@correo.com" required />
+            </div>
+            <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger mt-1">
+              El correo es obligatorio y debe ser válido.
+            </div>
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input type="password" class="form-control" id="password" formControlName="password" placeholder="Introduce tu contraseña" required />
+            </div>
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger mt-1">
+              La contraseña es obligatoria.
+            </div>
+          </div>
+
+          <!-- Mensaje de error -->
+          <div *ngIf="message" class="alert alert-danger text-center">
+            {{ message }}
+          </div>
+
+          <!-- Botones -->
+          <div class="d-grid mb-2">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill" [disabled]="loginForm.invalid">
+              Iniciar sesión
+            </button>
+          </div>
+
+          <div class="d-grid">
+            <button routerLink="/registrer" class="btn btn-outline-success btn-sm rounded-pill">
+              ¿No tienes cuenta? Regístrate
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  
+</div>

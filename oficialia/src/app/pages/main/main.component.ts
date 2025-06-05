@@ -4,6 +4,7 @@ import { ApiService } from '../../api.service';  // Asegúrate de que ApiService
 import { Observable } from 'rxjs';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { map, shareReplay } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-main',
@@ -15,27 +16,31 @@ export class MainComponent implements OnInit {
 
   private breakpointObserver = inject(BreakpointObserver);
   private router = inject(Router);
-  private apiService = inject(ApiService); // Asegúrate de que el servicio ApiService está bien inyectado
+  private apiService = inject(ApiService);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
       shareReplay()
     );
-    displayedColumns: string[] = ['numero', 'remitente', 'estatus', 'dependencia', 'dependencia_des'];
+
+  displayedColumns: string[] = ['numero', 'remitente', 'estatus', 'dependencia', 'dependencia_des'];
 
   oficios: any[] = []; // Array para almacenar los oficios
+
+  // Inicializamos dataSource con MatTableDataSource para soporte filtrado y paginado
+  dataSource = new MatTableDataSource<any>();
 
   ngOnInit(): void {
     this.cargarOficios(); // Cargar los oficios cuando el componente se inicialice
   }
 
-  // Método para hacer la petición HTTP a la API PHP
   cargarOficios(): void {
     this.apiService.obtenerTramite().subscribe({
       next: (response) => {
         if (response?.status === 'success') {
-          this.oficios = response.data; // Asigna los datos a la variable de oficios
+          this.oficios = response.data;
+          this.dataSource.data = this.oficios; // Asignar datos a MatTableDataSource
         } else {
           alert('Error al cargar los oficios');
         }
@@ -56,5 +61,11 @@ export class MainComponent implements OnInit {
   // Función placeholder que no está implementada
   showCrudComponent(): void {
     console.log('Método no implementado');
+  }
+
+  // Método para filtrar los datos en la tabla
+  aplicarFiltro(event: Event): void {
+    const valor = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = valor.trim().toLowerCase();
   }
 }

@@ -6,10 +6,9 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../api.service';
 import { DatePipe } from '@angular/common';
 
-
 @Component({
   selector: 'app-circular',
-  standalone: false,
+  standalone:false,
   templateUrl: './circular.component.html',
   styleUrls: ['./circular.component.css']
 })
@@ -18,6 +17,7 @@ export class CircularComponent {
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private apiService = inject(ApiService);
+  private datePipe = inject(DatePipe);
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -25,17 +25,12 @@ export class CircularComponent {
       shareReplay()
     );
 
-  circularForm: FormGroup;
-
-  constructor(private datePipe: DatePipe) {
-    // Define el formulario con los controles y sus validaciones
-    this.circularForm = this.fb.group({
-      titulo: ['', Validators.required],  // 'titulo' es requerido
-      fecha: ['', Validators.required],   // 'fecha' es requerido
-      descripcion: ['', Validators.required], // 'descripcion' es requerido
-      destinatarios: ['', Validators.required] // 'destinatarios' es requerido
-    });
-  }
+  circularForm: FormGroup = this.fb.group({
+    titulo: ['', Validators.required],
+    fecha: ['', Validators.required],
+    descripcion: ['', Validators.required],
+    destinatarios: ['', Validators.required]
+  });
 
   onLogout(): void {
     sessionStorage.removeItem('id');
@@ -45,12 +40,13 @@ export class CircularComponent {
   guardarCircular(): void {
     if (this.circularForm.valid) {
       const circularData = this.circularForm.value;
-  
+
       this.apiService.guardarCircular(circularData).subscribe({
         next: (response) => {
           console.log('Respuesta del servidor:', response);
           if (response.status === 'success') {
             alert('Circular guardada y enviada con éxito.');
+            this.circularForm.reset(); // Limpiar formulario
           } else {
             alert(`Circular guardada, pero no se pudo enviar el correo: ${response.message}`);
           }
@@ -64,6 +60,4 @@ export class CircularComponent {
       alert('Por favor completa todos los campos del formulario.');
     }
   }
-  
-  
 }

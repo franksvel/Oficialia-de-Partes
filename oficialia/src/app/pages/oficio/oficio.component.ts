@@ -51,12 +51,12 @@ export class OficioComponent implements OnInit {
           this.oficios = response.data;
           this.cdr.detectChanges();
         } else {
-          alert('Error al cargar los oficios');
+          alert('No se encontraron oficios almacenados');
         }
       },
       error: (error) => {
-        console.error('Error al cargar los oficios:', error);
-        alert('Hubo un error al cargar los oficios');
+        console.error('No se encontraron oficios almacenados:', error);
+        alert('No se encontraron oficios almacenados');
       }
     });
   }
@@ -171,39 +171,41 @@ export class OficioComponent implements OnInit {
     }
   }
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (!input?.files?.length) {
-      alert('No se ha seleccionado ningún archivo.');
-      return;
-    }
-
-    const file = input.files[0];
-
-    if (!this.oficio?.id) {
-      alert('No se ha seleccionado un oficio válido.');
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('id', this.oficio.id);
-
-    this.apiService.archivarDocumento(formData).subscribe({
-      next: (response) => {
-        if (response?.status === 'success') {
-          alert('Documento archivado correctamente');
-          this.cargarOficios();
-        } else {
-          alert('Error al archivar el documento');
-        }
-      },
-      error: (error) => {
-        console.error('Error al archivar el documento:', error);
-        alert('Hubo un error al archivar el documento');
-      }
-    });
+ onFileSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input?.files?.length) {
+    alert('No se ha seleccionado ningún archivo.');
+    return;
   }
+
+  const file = input.files[0];
+
+  if (!this.oficio?.id) {
+    alert('No se ha seleccionado un oficio válido.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('id', this.oficio.id);
+
+  this.apiService.archivarDocumento(formData).subscribe({
+    next: (response) => {
+      if (response?.status === 'success') {
+        alert('Documento archivado correctamente');
+        this.cargarOficios();  // Esto actualiza la lista incluyendo el campo 'archivo'
+        input.value = ''; // Limpia el input de archivos
+      } else {
+        alert('Error al archivar el documento');
+      }
+    },
+    error: (error) => {
+      console.error('Error al archivar el documento:', error);
+      alert('Hubo un error al archivar el documento');
+    }
+  });
+}
+
 
   abrirArchivo(oficio: any): void {
     if (!oficio?.archivo) {

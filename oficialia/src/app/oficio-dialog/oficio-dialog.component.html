@@ -5,38 +5,37 @@
   <!-- Número de Oficio -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Número de Oficio</mat-label>
-    <input matInput [(ngModel)]="oficio.numero" name="numero" required />
+    <input matInput [(ngModel)]="oficio.numero" name="numero" required (input)="CONVERTIR_A_MAYUSCULAS('numero')" />
   </mat-form-field>
 
-
- 
+  <!-- Fecha -->
   <mat-form-field class="full-width">
     <mat-label>Fecha</mat-label>
-    <input matInput type="date"  [(ngModel)]="oficio.fechaRecepcion" name="fechaRecepcion" required>
+    <input matInput type="date" [(ngModel)]="oficio.fechaRecepcion" name="fechaRecepcion" required />
   </mat-form-field>
 
   <!-- Remitente -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Remitente</mat-label>
-    <input matInput [(ngModel)]="oficio.remitente" name="remitente" required />
+    <input matInput [(ngModel)]="oficio.remitente" name="remitente" required (input)="CONVERTIR_A_MAYUSCULAS('remitente')" />
   </mat-form-field>
 
   <!-- Asunto -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Asunto</mat-label>
-    <input matInput [(ngModel)]="oficio.asunto" name="asunto" required />
+    <input matInput [(ngModel)]="oficio.asunto" name="asunto" required (input)="CONVERTIR_A_MAYUSCULAS('asunto')" />
   </mat-form-field>
 
   <!-- Dependencia -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Dependencia</mat-label>
-    <input matInput [(ngModel)]="oficio.dependencia" name="dependencia" required />
+    <input matInput [(ngModel)]="oficio.dependencia" name="dependencia" required (input)="CONVERTIR_A_MAYUSCULAS('dependencia')" />
   </mat-form-field>
 
   <!-- Área Destino -->
   <mat-form-field appearance="fill" class="full-width">
     <mat-label>Área Destino</mat-label>
-    <input matInput [(ngModel)]="oficio.dependencia_des" name="dependencia_des" required />
+    <input matInput [(ngModel)]="oficio.dependencia_des" name="dependencia_des" required (input)="CONVERTIR_A_MAYUSCULAS('dependencia_des')" />
   </mat-form-field>
 
   <!-- Estatus -->

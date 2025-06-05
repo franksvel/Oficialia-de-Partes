@@ -203,7 +203,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
       <body>
         <div class="card">
           <div class="header">
-            <img src="transporte.png" alt="logo" />
+            <img src="ofipa.png" alt="logo" />
             <div>
               <div class="title">DIRECCIÓN GENERAL ADMINISTRATIVA</div>
               <div class="subtitle">CONTROL Y SEGUIMIENTO DE ASUNTOS</div>

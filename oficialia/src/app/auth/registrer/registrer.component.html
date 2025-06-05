@@ -1,64 +1,67 @@
-<div class="container d-flex justify-content-center align-items-center vh-100">
+<div class="container d-flex justify-content-center align-items-center vh-100 bg-light">
   <div class="row w-100">
-    <div class="col-12 col-md-6 col-lg-4 mx-auto">
-      <div class="card shadow-lg">
-        <div class="card-body">
-          <img class="container mb-4" src="al_estilo_jalisco.png" alt="Logo">
-          <h2 class="mb-4 text-center">Registro de Usuario</h2>
-          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label for="email" class="form-label">Correo electrónico</label>
-              <input
-                id="email"
-                type="email"
-                class="form-control"
-                formControlName="email"
-                placeholder="Introduce tu correo"
-              />
-              <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-danger">
-                El correo es obligatorio y debe ser válido.
-              </div>
-            </div>
-        
-            <div class="mb-3">
-              <label for="password" class="form-label">Contraseña</label>
-              <input
-                id="password"
-                type="password"
-                class="form-control"
-                formControlName="password"
-                placeholder="Introduce tu contraseña"
-              />
-              <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger">
-                La contraseña es obligatoria y debe tener al menos 6 caracteres.
-              </div>
-            </div>
-        
-            <div class="mb-3">
-              <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                class="form-control"
-                formControlName="confirmPassword"
-                placeholder="Confirma tu contraseña"
-              />
-              <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-danger">
-                La confirmación de la contraseña es obligatoria y debe tener al menos 6 caracteres.
-              </div>
-            </div>
-
-            <div *ngIf="message" class="alert alert-info">
-              {{ message }}
-            </div>
-        
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || loading">
-                {{ loading ? 'Registrando...' : 'Registrar' }}
-              </button>
-            </div>
-          </form>
+    <div class="col-12 col-md-8 col-lg-5 mx-auto">
+      <div class="card shadow border-0 rounded-4 p-4">
+        <div class="text-center">
+          <img src="al_estilo_jalisco.png" class="mb-3" alt="Logo" style="width: 100px;" />
+          <h3 class="mb-2">Registro de Usuario</h3>
+          <p class="text-muted mb-4">Crea tu cuenta para acceder al sistema</p>
         </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          <!-- Correo -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo electrónico</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+              <input id="email" type="email" class="form-control" formControlName="email" placeholder="ejemplo@correo.com" />
+            </div>
+            <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched" class="text-danger mt-1">
+              El correo es obligatorio y debe ser válido.
+            </div>
+          </div>
+
+          <!-- Contraseña -->
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+              <input id="password" type="password" class="form-control" formControlName="password" placeholder="Mínimo 6 caracteres" />
+            </div>
+            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched" class="text-danger mt-1">
+              La contraseña es obligatoria y debe tener al menos 6 caracteres.
+            </div>
+          </div>
+
+          <!-- Confirmar contraseña -->
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirmar contraseña</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="fas fa-check-circle"></i></span>
+              <input id="confirmPassword" type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirma la contraseña" />
+            </div>
+            <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched" class="text-danger mt-1">
+              La confirmación de la contraseña es obligatoria.
+            </div>
+          </div>
+
+          <!-- Mensaje -->
+          <div *ngIf="message" class="alert alert-info text-center">
+            {{ message }}
+          </div>
+
+          <!-- Botón registrar -->
+          <div class="d-grid mb-2">
+            <button type="submit" class="btn btn-success btn-lg rounded-pill" [disabled]="registerForm.invalid || loading">
+              {{ loading ? 'Registrando...' : 'Registrar' }}
+            </button>
+          </div>
+
+          <!-- Botón iniciar sesión -->
+          <div class="d-grid">
+            <button routerLink="/login" class="btn btn-outline-primary btn-sm rounded-pill">¿Ya tienes cuenta? Inicia sesión</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
