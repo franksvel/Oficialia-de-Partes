@@ -9,36 +9,39 @@
     </div>
 
     <mat-nav-list class="letra">
-      <a mat-list-item routerLink="/main" routerLinkActive="active-link">Oficios en Tramite</a>
-      <a mat-list-item routerLink="/oficio" routerLinkActive="active-link">Registro de Oficios</a>
-      <a mat-list-item routerLink="/circular" routerLinkActive="active-link">Generar Circular</a>
-      <a mat-list-item routerLink="/user" routerLinkActive="active-link">Permisos y Roles</a>
-      <a mat-list-item routerLink="/agenda" routerLinkActive="active-link">Agenda</a>
+      <a mat-list-item routerLink="/main" routerLinkActive="active-link">
+        <mat-icon>drafts</mat-icon> <span> Oficios en Trámite</span>
+      </a>
+      <a mat-list-item routerLink="/oficio" routerLinkActive="active-link">
+        <mat-icon>post_add</mat-icon> <span> Registro de Oficios</span>
+      </a>
+      <!-- <a mat-list-item routerLink="/circular" routerLinkActive="active-link">
+        <mat-icon>sync_alt</mat-icon> <span> Generar Circular</span>
+      </a> -->
+      <a mat-list-item routerLink="/user" routerLinkActive="active-link">
+        <mat-icon>manage_accounts</mat-icon> <span> Permisos y Roles</span>
+      </a>
+      <a mat-list-item routerLink="/agenda" routerLinkActive="active-link">
+        <mat-icon>event</mat-icon> <span> Agenda</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <mat-toolbar color="primary" class="main-toolbar">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
 
       <span class="toolbar-title">Sistema Integral de Oficialía de Partes</span>
 
-      <!-- <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Buscar</mat-label>
-        <input matInput (input)="aplicarFiltro($event)" placeholder="Buscar" />
-      </mat-form-field> -->
 
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icono de usuario">
         <mat-icon>account_circle</mat-icon>
       </button>
 
       <mat-menu #menu="matMenu">
+        <mat-divider></mat-divider>
         <button mat-menu-item (click)="onLogout()">
           <mat-icon>logout</mat-icon>
           <span>Cerrar Sesión</span>
@@ -47,7 +50,6 @@
     </mat-toolbar>
 
     <div class="content-wrapper">
-       <h6 class="section-title">Lista de Oficios</h6>
       <div class="section-header">
         <button mat-raised-button color="primary" (click)="openOficioDialog()">Nuevo Oficio</button>
         <button mat-raised-button color="primary" routerLink="/acuse">Generar Acuse</button>
@@ -56,49 +58,41 @@
       <div class="table-container" *ngIf="oficios && oficios.length > 0; else noData">
         <table mat-table [dataSource]="oficios" class="mat-elevation-z8">
 
-          <!-- ID oculto -->
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef class="hidden">ID</th>
             <td mat-cell *matCellDef="let oficio" class="hidden">{{ oficio.id }}</td>
           </ng-container>
 
-          <!-- Número -->
           <ng-container matColumnDef="numero">
             <th mat-header-cell *matHeaderCellDef> Número </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.numero }}</td>
           </ng-container>
 
-          <!-- Remitente -->
           <ng-container matColumnDef="remitente">
             <th mat-header-cell *matHeaderCellDef> Remitente </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.remitente }}</td>
           </ng-container>
 
-          <!-- Asunto -->
           <ng-container matColumnDef="asunto">
             <th mat-header-cell *matHeaderCellDef> Asunto </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.asunto }}</td>
           </ng-container>
 
-          <!-- Dependencia -->
           <ng-container matColumnDef="dependencia">
             <th mat-header-cell *matHeaderCellDef> Dependencia </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.dependencia }}</td>
           </ng-container>
 
-          <!-- Área Destino -->
           <ng-container matColumnDef="dependencia_des">
-            <th mat-header-cell *matHeaderCellDef> Área Destino </th>
+            <th mat-header-cell *matHeaderCellDef> Dependencia Destino </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.dependencia_des }}</td>
           </ng-container>
 
-          <!-- Estatus -->
           <ng-container matColumnDef="estatus">
             <th mat-header-cell *matHeaderCellDef> Estatus </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.estatus }}</td>
           </ng-container>
 
-          <!-- Archivo -->
           <ng-container matColumnDef="archivo">
             <th mat-header-cell *matHeaderCellDef> Archivo </th>
             <td mat-cell *matCellDef="let oficio">
@@ -106,23 +100,23 @@
                 Ver Documento
               </a>
               <span *ngIf="!oficio.archivo">No adjunto</span>
-            <button mat-icon-button (click)="openFileSelector(oficio)" *ngIf="!oficio.archivo">
-             <mat-icon>attach_file</mat-icon>
-            </button>
-
+              <button mat-icon-button (click)="openFileSelector(oficio)" *ngIf="!oficio.archivo">
+                <mat-icon>attach_file</mat-icon>
+              </button>
             </td>
           </ng-container>
 
-          <!-- Acciones -->
           <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+            <th mat-header-cell *matHeaderCellDef class="acciones-header"> Acciones </th>
             <td mat-cell *matCellDef="let oficio">
-              <button mat-icon-button (click)="onEdit(oficio)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button mat-icon-button (click)="onDelete(oficio)">
-                <mat-icon>delete</mat-icon>
-              </button>
+              <div class="acciones-btns">
+                <button mat-icon-button color="accent" (click)="onEdit(oficio)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="onDelete(oficio)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
             </td>
           </ng-container>
 
@@ -138,5 +132,4 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
-<!-- Input de archivo oculto -->
 <input type="file" id="fileInput" style="display: none" (change)="onFileSelected($event)" accept=".pdf,.jpg,.png" />

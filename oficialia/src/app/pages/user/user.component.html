@@ -3,72 +3,87 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar><img src="ofipa.png" alt="Logo"></mat-toolbar>
-    <mat-nav-list class="centered-list">
-      <a mat-list-item routerLink="/main">Inicio</a>
-      <a mat-list-item routerLink="/oficio">Oficio</a>
-      <!-- <a mat-list-item routerLink="/circular">Circulares</a> -->
-      <a mat-list-item routerLink="/agenda">Agenda</a>
-      <!-- <a mat-list-item routerLink="/report">Reportes</a> -->
-      <a mat-list-item routerLink="/user">Permisos y Roles</a>
+
+    <div class="sidenav-header">
+      <img src="transporte.png" alt="Logo" class="sidenav-logo" />
+    </div>
+
+    <mat-nav-list class="letra">
+      <a mat-list-item routerLink="/main" routerLinkActive="active-link">
+        <mat-icon>drafts</mat-icon> <span> Oficios en Trámite</span>
+      </a>
+      <a mat-list-item routerLink="/oficio" routerLinkActive="active-link">
+        <mat-icon>post_add</mat-icon> <span> Registro de Oficios</span>
+      </a>
+      <!-- <a mat-list-item routerLink="/circular" routerLinkActive="active-link">
+        <mat-icon>sync_alt</mat-icon> <span> Generar Circular</span>
+      </a> -->
+      <a mat-list-item routerLink="/user" routerLinkActive="active-link">
+        <mat-icon>manage_accounts</mat-icon> <span> Permisos y Roles</span>
+      </a>
+      <a mat-list-item routerLink="/agenda" routerLinkActive="active-link">
+        <mat-icon>event</mat-icon> <span> Agenda</span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
+
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
-      <button
-        type="button"
-        aria-label="Toggle sidenav"
-        mat-icon-button
-        (click)="drawer.toggle()">
-        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+    <mat-toolbar color="primary" class="main-toolbar">
+      <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
       </button>
-      <span>Sistema Integral de Oficialía de Partes</span>
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+
+      <span class="toolbar-title">Sistema Integral de Oficialía de Partes</span>
+
+      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icono de usuario">
         <mat-icon>account_circle</mat-icon>
       </button>
+
       <mat-menu #menu="matMenu">
+        <mat-divider></mat-divider>
         <button mat-menu-item (click)="onLogout()">
           <mat-icon>logout</mat-icon>
-          <span>Cerrar Sesion</span>
+          <span>Cerrar Sesión</span>
         </button>
       </mat-menu>
     </mat-toolbar>
-    <div>
-      <h6>Roles del Usuario</h6>
-     </div>
-     <div class="content">
-      <mat-table [dataSource]="usuarios" class="mat-elevation-z8">
-        
-        <!-- Columna de ID (oculta) -->
-        <ng-container matColumnDef="id">
-          <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
-          <mat-cell *matCellDef="let user" > {{ user.id }} </mat-cell>
-        </ng-container>
 
-        <!-- Columna de Email -->
-        <ng-container matColumnDef="email">
-          <mat-header-cell *matHeaderCellDef> Usuario </mat-header-cell>
-          <mat-cell *matCellDef="let user"> {{ user.email }} </mat-cell>
-        </ng-container>
+    <div class="content-wrapper">
+      <div class="section-header">
+        <h6 class="titulo">Roles del Usuario</h6>
+      </div>
 
-        <!-- Columna de Roles -->
-        <ng-container matColumnDef="rol">
-          <mat-header-cell *matHeaderCellDef> Rol </mat-header-cell>
-          <mat-cell *matCellDef="let user">
-            <!-- Mat-select para elegir el rol -->
-            <mat-select [(ngModel)]="user.id_roles" (selectionChange)="actualizarRol(user)">
-              <mat-option *ngFor="let rol of roles" [value]="rol.id">
-                {{ rol.nombre }}
-              </mat-option>
-            </mat-select>
-          </mat-cell>
-        </ng-container>
+      <div class="table-container">
+        <table mat-table [dataSource]="usuarios" class="mat-elevation-z8">
 
-        <!-- Filas de la tabla -->
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-        
-      </mat-table>
+          <!-- ID (oculto o visible según necesidad) -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="hidden">ID</th>
+            <td mat-cell *matCellDef="let user" class="hidden"> {{ user.id }} </td>
+          </ng-container>
+
+          <!-- Usuario -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef>Usuario</th>
+            <td mat-cell *matCellDef="let user"> {{ user.email }} </td>
+          </ng-container>
+
+          <!-- Rol -->
+          <ng-container matColumnDef="rol">
+            <th mat-header-cell *matHeaderCellDef>Rol</th>
+            <td mat-cell *matCellDef="let user">
+              <mat-select [(ngModel)]="user.id_roles" (selectionChange)="actualizarRol(user)">
+                <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                  {{ rol.nombre }}
+                </mat-option>
+              </mat-select>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+        </table>
+      </div>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

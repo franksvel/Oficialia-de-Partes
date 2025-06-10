@@ -54,6 +54,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 
 
 
+
 @NgModule({
   declarations: [
 
@@ -104,7 +105,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     MatSelectModule,
     MatOptionModule,
     LayoutModule,
-    MatSnackBarModule
+    MatSnackBarModule,
     
   
  
