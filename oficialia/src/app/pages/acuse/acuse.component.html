@@ -58,19 +58,64 @@
         </mat-form-field>
       </div>
 
-      <!-- Tabla de acuses -->
-      <div *ngIf="dataSource.data.length > 0" class="table-container">
-        <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 styled-table">
-          <!-- Definición de columnas aquí -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-        </table>
-        <mat-paginator
-          [pageSize]="3"
-          [pageSizeOptions]="[3]"
-          showFirstLastButtons
-        ></mat-paginator>
-      </div>
+     <!-- Tabla de acuses -->
+<div *ngIf="dataSource.data.length > 0" class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 styled-table">
+
+    <!-- ID -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+    </ng-container>
+
+    <!-- Fecha -->
+    <ng-container matColumnDef="fecha">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+      <td mat-cell *matCellDef="let element">{{ element.fecha }}</td>
+    </ng-container>
+
+    <!-- Documento -->
+    <ng-container matColumnDef="documento">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Documento</th>
+      <td mat-cell *matCellDef="let element">{{ element.documento }}</td>
+    </ng-container>
+
+    <!-- Asunto -->
+    <ng-container matColumnDef="asunto">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Asunto</th>
+      <td mat-cell *matCellDef="let element">{{ element.asunto }}</td>
+    </ng-container>
+
+    <!-- Remitido -->
+    <ng-container matColumnDef="remitido">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Remitido</th>
+      <td mat-cell *matCellDef="let element">{{ element.remitido }}</td>
+    </ng-container>
+
+    <!-- Turnado -->
+    <ng-container matColumnDef="turnado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Turnado</th>
+      <td mat-cell *matCellDef="let element">{{ element.turnado }}</td>
+    </ng-container>
+
+    <!-- Indicación -->
+    <ng-container matColumnDef="indicacion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Indicación</th>
+      <td mat-cell *matCellDef="let element">{{ element.indicacion }}</td>
+    </ng-container>
+
+    <!-- Encabezados y filas -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSize]="3"
+    [pageSizeOptions]="[3]"
+    showFirstLastButtons
+  ></mat-paginator>
+</div>
+
 
       <!-- Formulario de nuevo acuse -->
   <mat-card class="acuse-form-card pro-form">
@@ -85,6 +130,7 @@
           <mat-label>Fecha</mat-label>
           <input matInput type="date" [(ngModel)]="acuseForm.fecha" name="fecha" required />
         </mat-form-field>
+        
 
         <mat-form-field appearance="outline" class="form-field-pro">
           <mat-label>Documento</mat-label>

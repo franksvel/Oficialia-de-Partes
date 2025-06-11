@@ -25,7 +25,7 @@ export class OficioComponent implements OnInit {
     shareReplay()
   );
 
-  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'archivo','estatus','dependencia','dependencia_des','acciones',];
+  displayedColumns: string[] = ['id', 'numero', 'remitente', 'asunto', 'archivo', 'archivo2', 'estatus', 'dependencia', 'dependencia_des', 'acciones'];
 
   isEditMode = false;
   oficio = {
@@ -34,11 +34,14 @@ export class OficioComponent implements OnInit {
     fechaRecepcion: '',
     remitente: '',
     asunto: '',
-    dependencia:'',
-    dependencia_des:'',
+    dependencia: '',
+    dependencia_des: '',
     estatus: ''
   };
   oficios: any[] = [];
+
+  // Variable para mantener oficio seleccionado para archivo2
+  selectedOficio2: any = null;
 
   ngOnInit(): void {
     this.cargarOficios();
@@ -147,7 +150,7 @@ export class OficioComponent implements OnInit {
 
   onResetForm(): void {
     this.isEditMode = false;
-    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '', dependencia:'', dependencia_des:'',estatus:''  };
+    this.oficio = { id: '', numero: '', fechaRecepcion: '', remitente: '', asunto: '', dependencia: '', dependencia_des: '', estatus: '' };
   }
 
   onLogout(): void {
@@ -171,41 +174,99 @@ export class OficioComponent implements OnInit {
     }
   }
 
- onFileSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  if (!input?.files?.length) {
-    alert('No se ha seleccionado ningún archivo.');
-    return;
-  }
-
-  const file = input.files[0];
-
-  if (!this.oficio?.id) {
-    alert('No se ha seleccionado un oficio válido.');
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('id', this.oficio.id);
-
-  this.apiService.archivarDocumento(formData).subscribe({
-    next: (response) => {
-      if (response?.status === 'success') {
-        alert('Documento archivado correctamente');
-        this.cargarOficios();  // Esto actualiza la lista incluyendo el campo 'archivo'
-        input.value = ''; // Limpia el input de archivos
-      } else {
-        alert('Error al archivar el documento');
-      }
-    },
-    error: (error) => {
-      console.error('Error al archivar el documento:', error);
-      alert('Hubo un error al archivar el documento');
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input?.files?.length) {
+      alert('No se ha seleccionado ningún archivo.');
+      return;
     }
-  });
-}
 
+    const file = input.files[0];
+
+    if (!this.oficio?.id) {
+      alert('No se ha seleccionado un oficio válido.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('id', this.oficio.id);
+
+    this.apiService.archivarDocumento(formData).subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          alert('Documento archivado correctamente');
+          this.cargarOficios();
+          input.value = ''; // Limpia el input
+        } else {
+          alert('Error al archivar el documento');
+        }
+      },
+      error: (error) => {
+        console.error('Error al archivar el documento:', error);
+        alert('Hubo un error al archivar el documento');
+      }
+    });
+  }
+
+  // CORRECCIÓN IMPORTANTE: ahora recibe el evento y no el oficio,
+  // se usa selectedOficio2 para saber a qué oficio actualizar
+  onFileSelected2(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input?.files?.length) {
+      alert('No se ha seleccionado ningún archivo.');
+      return;
+    }
+
+    const file = input.files[0];
+
+    if (!this.selectedOficio2?.id) {
+      alert('No se ha seleccionado un oficio válido para el segundo archivo.');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('id', this.selectedOficio2.id);
+
+    this.apiService.archivarDocumento2(formData).subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          alert('Segundo documento archivado correctamente');
+
+          // Actualizar solo el oficio modificado en el array
+          const index = this.oficios.findIndex(o => o.id === this.selectedOficio2.id);
+          if (index !== -1) {
+            this.oficios[index].archivo2 = response.fileName; // Asumiendo que el backend devuelve el nombre en fileName
+          }
+
+          // Forzar detección de cambios
+          this.cdr.detectChanges();
+
+          input.value = ''; // Limpia el input
+          this.selectedOficio2 = null; // Limpiar selección
+        } else {
+          alert('Error al archivar el segundo documento');
+        }
+      },
+      error: (error) => {
+        console.error('Error al archivar el segundo documento:', error);
+        alert('Hubo un error al archivar el segundo documento');
+      }
+    });
+  }
+
+  openFileSelector2(oficio: any): void {
+    if (!oficio || !oficio.id) {
+      alert('Por favor, selecciona un oficio antes de subir un archivo.');
+      return;
+    }
+    this.selectedOficio2 = oficio;
+    const fileInput2 = document.getElementById('fileInput2') as HTMLInputElement;
+    if (fileInput2) {
+      fileInput2.click();
+    }
+  }
 
   abrirArchivo(oficio: any): void {
     if (!oficio?.archivo) {
@@ -217,5 +278,13 @@ export class OficioComponent implements OnInit {
     window.open(url, '_blank');
   }
 
+  abrirArchivo2(oficio: any): void {
+    if (!oficio?.archivo2) {
+      alert('No hay segundo archivo para visualizar.');
+      return;
+    }
 
+    const url = `http://localhost/api/serve_uploads.php?file=${encodeURIComponent(oficio.archivo2)}`;
+    window.open(url, '_blank');
+  }
 }

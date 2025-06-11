@@ -39,7 +39,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
     shareReplay()
   );
 
-  displayedColumns: string[] = ['id', 'asunto', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'accion'];
+  displayedColumns: string[] = ['asunto', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'accion'];
   dataSource = new MatTableDataSource<Acuse>();
 
   isEditMode = false;

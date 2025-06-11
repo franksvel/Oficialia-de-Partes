@@ -15,9 +15,6 @@
       <a mat-list-item routerLink="/oficio" routerLinkActive="active-link">
         <mat-icon>post_add</mat-icon> <span> Registro de Oficios</span>
       </a>
-      <!-- <a mat-list-item routerLink="/circular" routerLinkActive="active-link">
-        <mat-icon>sync_alt</mat-icon> <span> Generar Circular</span>
-      </a> -->
       <a mat-list-item routerLink="/user" routerLinkActive="active-link">
         <mat-icon>manage_accounts</mat-icon> <span> Permisos y Roles</span>
       </a>
@@ -34,7 +31,6 @@
       </button>
 
       <span class="toolbar-title">Sistema Integral de Oficialía de Partes</span>
-
 
       <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Icono de usuario">
         <mat-icon>account_circle</mat-icon>
@@ -106,6 +102,19 @@
             </td>
           </ng-container>
 
+          <ng-container matColumnDef="archivo2">
+            <th mat-header-cell *matHeaderCellDef> Respuesta</th>
+            <td mat-cell *matCellDef="let oficio">
+              <a *ngIf="oficio.archivo2" (click)="abrirArchivo2(oficio)" style="cursor: pointer;">
+                Ver Documento
+              </a>
+              <span *ngIf="!oficio.archivo2">No adjunto</span>
+              <button mat-icon-button (click)="openFileSelector2(oficio)" *ngIf="!oficio.archivo2">
+                <mat-icon>attach_file</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
           <ng-container matColumnDef="acciones">
             <th mat-header-cell *matHeaderCellDef class="acciones-header"> Acciones </th>
             <td mat-cell *matCellDef="let oficio">
@@ -132,4 +141,6 @@
   </mat-sidenav-content>
 </mat-sidenav-container>
 
+<!-- Inputs ocultos para archivos -->
 <input type="file" id="fileInput" style="display: none" (change)="onFileSelected($event)" accept=".pdf,.jpg,.png" />
+<input type="file" id="fileInput2" style="display: none" (change)="onFileSelected2($event)" accept=".pdf,.jpg,.png" />

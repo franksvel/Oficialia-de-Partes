@@ -96,6 +96,23 @@ export class ApiService {
         })
       );
   }
+
+
+
+  logout(): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+  
+    return this.http.post<any>(`${this.apiUrl}/logout.php`, {}, { headers, withCredentials: true })
+      .pipe(
+        catchError(error => {
+          console.error('Error al cerrar sesión:', error);
+          return throwError(() => new Error('No se pudo cerrar sesión, intenta de nuevo.'));
+        })
+      );
+  }
+  
   obtenerUsuario(): Observable<any> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
@@ -299,6 +316,16 @@ export class ApiService {
   archivarDocumento(formData: FormData): Observable<any> {
     const headers = new HttpHeaders();
     return this.http.post<any>(`${this.apiUrl}/archivar_oficio.php`, formData, { headers})
+      .pipe(
+        catchError(error => {
+          console.error('Error al archivar el documento:', error);
+          return throwError(() => new Error('Algo salió mal, intenta de nuevo.'));
+        })
+      );
+  }
+  archivarDocumento2(formData: FormData): Observable<any> {
+    const headers = new HttpHeaders();
+    return this.http.post<any>(`${this.apiUrl}/archivar_oficio2.php`, formData, { headers})
       .pipe(
         catchError(error => {
           console.error('Error al archivar el documento:', error);
