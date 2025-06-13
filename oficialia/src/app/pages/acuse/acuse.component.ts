@@ -39,7 +39,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
     shareReplay()
   );
 
-  displayedColumns: string[] = ['asunto', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'accion'];
+  displayedColumns: string[] = ['id', 'asunto', 'documento', 'remitido', 'fecha', 'turnado', 'indicacion', 'acciones'];
   dataSource = new MatTableDataSource<Acuse>();
 
   isEditMode = false;
@@ -203,7 +203,7 @@ export class AcuseComponent implements OnInit, AfterViewInit {
       <body>
         <div class="card">
           <div class="header">
-            <img src="ofipa.png" alt="logo" />
+            <img src="transporte.png" alt="logo" />
             <div>
               <div class="title">DIRECCIÓN GENERAL ADMINISTRATIVA</div>
               <div class="subtitle">CONTROL Y SEGUIMIENTO DE ASUNTOS</div>
