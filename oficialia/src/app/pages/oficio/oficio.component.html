@@ -84,7 +84,7 @@
           </ng-container>
 
           <ng-container matColumnDef="dependencia_des">
-            <th mat-header-cell *matHeaderCellDef> Area Destino </th>
+            <th mat-header-cell *matHeaderCellDef> Dependencia Destino </th>
             <td mat-cell *matCellDef="let oficio">{{ oficio.dependencia_des }}</td>
           </ng-container>
 
@@ -99,6 +99,7 @@
               <a *ngIf="oficio.archivo" (click)="abrirArchivo(oficio)" style="cursor: pointer;">
                 Ver Documento
               </a>
+              <span *ngIf="!oficio.archivo">No adjunto</span>
               <button mat-icon-button (click)="openFileSelector(oficio)" *ngIf="!oficio.archivo">
                 <mat-icon>attach_file</mat-icon>
               </button>
