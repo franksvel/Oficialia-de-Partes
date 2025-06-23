@@ -341,6 +341,19 @@ descargarArchivo(nombreArchivo: string) {
     withCredentials: true, // si manejas sesiones/cookies
   });
 }
+cerrarSesion(): Observable<any> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.post<any>(`${this.apiUrl}/logout.php`, {}, { headers, withCredentials: true })
+    .pipe(
+      catchError(error => {
+        console.error('Error al cerrar sesión:', error);
+        return throwError(() => new Error('No se pudo cerrar sesión, intenta de nuevo.'));
+      })
+    );
+}
 
 
 }

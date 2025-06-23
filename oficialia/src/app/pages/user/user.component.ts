@@ -128,10 +128,22 @@ actualizarRol(user: Usuario): void {
     this.snackBar.open(mensaje, 'Cerrar', { duration: 3000, panelClass: ['success-snackbar'] });
   }
 
-  // Manejar el cierre de sesión
   onLogout(): void {
-    sessionStorage.removeItem('id');
-    this.router.navigate(['/login']);
+    this.apiService.cerrarSesion().subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          sessionStorage.removeItem('id'); // Remueve el item de sesión
+          this.router.navigate(['/login']); // Redirige al login
+          alert(response.message); // Muestra el mensaje de éxito
+        } else {
+          alert('Error al cerrar la sesión');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cerrar la sesión:', error);
+        alert('Hubo un error al cerrar la sesión');
+      }
+    });
   }
 
   // Mostrar errores usando MatSnackBar

@@ -52,11 +52,29 @@ export class MainComponent implements OnInit {
     });
   }
 
-  // Método de logout
   onLogout(): void {
-    sessionStorage.removeItem('id'); // Remueve el item de sesión
-    this.router.navigate(['/login']); // Redirige al login
+    this.apiService.logout().subscribe({
+      next: (response) => {
+        if (response?.status === 'success') {
+          sessionStorage.removeItem('id'); // Remover item de sesión
+          this.router.navigate(['/login']); // Redirigir al login
+          alert(response.message); // Mostrar mensaje de éxito
+        } else {
+          console.error('Error inesperado en el backend:', response);
+          alert('Error al cerrar sesión');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+        if (error.error && error.error.message) {
+          alert(`Error: ${error.error.message}`);
+        } else {
+          alert('Hubo un error al cerrar la sesión. Revisa la consola para más detalles.');
+        }
+      }
+    });
   }
+  
 
   // Función placeholder que no está implementada
   showCrudComponent(): void {
