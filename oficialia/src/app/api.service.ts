@@ -66,8 +66,8 @@ export class ApiService {
   }
   
   // Método para registrar un usuario (actualizado para enviar solo email y password)
-  registerUser(email: string, password: string): Observable<any> {
-    const body = { email, password };
+  registerUser(nombre_u: string, email: string, password: string): Observable<any> {
+    const body = {nombre_u,  email, password };
     const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });

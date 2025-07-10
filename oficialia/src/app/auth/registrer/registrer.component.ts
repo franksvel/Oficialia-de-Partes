@@ -15,6 +15,7 @@ export class RegistrerComponent {
 
   constructor(private fb: FormBuilder, private apiService: ApiService) {
     this.registerForm = this.fb.group({
+      nombre_u:['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]], 
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
@@ -27,7 +28,7 @@ export class RegistrerComponent {
       return;
     }
 
-    const { email, password, confirmPassword } = this.registerForm.value;
+    const { nombre_u, email, password, confirmPassword } = this.registerForm.value;
 
     
     if (password !== confirmPassword) {
@@ -38,7 +39,7 @@ export class RegistrerComponent {
     this.loading = true;
 
   
-    this.apiService['registerUser'](email, password).subscribe({
+    this.apiService['registerUser'](nombre_u, email, password).subscribe({
       next: (response) => {
         this.loading = false;
         if (response.status === 'success') {
