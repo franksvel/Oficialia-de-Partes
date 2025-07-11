@@ -30,7 +30,7 @@ import { MainComponent } from './pages/main/main.component';
 import { AgendaComponent } from './pages/agenda/agenda.component';
 import { CircularComponent } from './pages/circular/circular.component';
 import { ApiService } from './api.service';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withFetch } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistrerComponent } from './auth/registrer/registrer.component';
 import { FullCalendarModule } from '@fullcalendar/angular';
@@ -46,6 +46,9 @@ import { AcuseComponent } from './pages/acuse/acuse.component';
 import { ListacircularComponent } from './pages/listacircular/listacircular.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { LoaderComponent } from './loader/loader.component';
+import { withInterceptorsFromDi } from '@angular/common/http';
+import { LoaderInterceptor } from './interceptors/loader.interceptor';
 
 
 
@@ -71,6 +74,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     AcuseComponent,
     ListacircularComponent,
     ChatbotComponent,
+    LoaderComponent,
 
 
     
@@ -113,12 +117,17 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
 ],
   providers: [
     ApiService,
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
+     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+    
     provideClientHydration(withEventReplay()),
     provideFirebaseApp(() => initializeApp({ projectId: "oficialia-d3a32", appId: "1:849796925257:web:d6279ea69ecb45aee8bc98", storageBucket: "oficialia-d3a32.firebasestorage.app", apiKey: "AIzaSyBBNd7sZ6P-uyQOIVL0qgdtbv4Am7oEkzg", authDomain: "oficialia-d3a32.firebaseapp.com", messagingSenderId: "849796925257", measurementId: "G-6YSJ0BKR92" })),
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore()),
     provideHttpClient(withFetch()) ,
-    { provide: MAT_DATE_LOCALE, useValue: 'es-MX' } 
+    { provide: MAT_DATE_LOCALE, useValue: 'es-MX' } ,
+   
+
 
   ],
   bootstrap: [AppComponent],
